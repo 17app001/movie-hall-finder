@@ -36,6 +36,18 @@ Rules:
 - Promotion to authoritative status requires explicit human approval.
 - If promoted, update this file in the same change.
 
+### V2.1.1 implementation authorization — 2026-09-05
+Jerry explicitly authorized implementation of the V2.1.1 UI polish candidate on 2026-09-05.
+
+Authorization boundaries and required completion steps:
+- V2.1 remains the authoritative baseline throughout this implementation pass.
+- Authorization is limited to the V2.1.1 UI polish scope; do not change core product rules, recommendation logic, or the established user flow.
+- Run the full test suite and production build before handing off for review.
+- Refresh every screenshot affected by the UI polish implementation.
+- After implementation and verification, update this file to record: **implementation completed / pending Niko review**.
+- Then **STOP at the Niko review gate**. Do not proceed beyond review or treat V2.1.1 as approved.
+- Do not promote V2.1.1 to the authoritative specification without explicit Jerry/Niko approval.
+
 ### Maintenance rule
 Whenever a newer authoritative product/UI/architecture spec is intentionally created, merged, or promoted, the same work must update this file so this authority map never points to an older version.
 
