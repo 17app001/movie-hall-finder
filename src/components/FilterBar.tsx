@@ -34,7 +34,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   resultCount,
   onPickClick
 }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(() =>
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "drawer"
+  );
   const currentMovie = movies.find((m) => m.id === preferences.movieId) || movies[0];
 
   const updatePreference = <K extends keyof FilterPreferences>(
