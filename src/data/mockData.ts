@@ -1,0 +1,387 @@
+import { Hall, Movie, Showtime } from "../types";
+
+export const MOCK_MOVIES: Movie[] = [
+  {
+    id: "movie-1",
+    title: "希望：末日血戰",
+    englishTitle: "War of Hope: Final Stand",
+    runtime: 154,
+    rating: "輔15級",
+    posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
+    backdropUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=80",
+    genre: ["科幻", "動作", "災難", "IMAX原生特攝"],
+    synopsis: "2048 年，面對外星異種入侵與地表生態崩毀，人類最後防線在廢墟中展開殊死戰。全片採用原生 IMAX 攝影與 Dolby Atmos 全景聲混音，低頻爆破與空間定位音效極具震撼力。",
+    recommendedFormat: ["Dolby Atmos", "IMAX", "4DX", "LUXE"],
+    releaseDate: "2026-09-04"
+  },
+  {
+    id: "movie-2",
+    title: "沙丘：第三部",
+    englishTitle: "Dune: Part Three",
+    runtime: 168,
+    rating: "輔12級",
+    posterUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80",
+    backdropUrl: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1600&q=80",
+    genre: ["科幻", "冒險", "史詩", "劇情"],
+    synopsis: "保羅·亞崔迪的聖戰燃遍宇宙，厄拉科斯沙漠星系命運的終極篇章。漢斯·季默配樂磅礴，極致的視覺音場與沙漠沙蟲巨獸震撼，強烈建議選擇巨大廳或 IMAX 觀賞。",
+    recommendedFormat: ["IMAX", "Dolby Atmos", "LUXE"],
+    releaseDate: "2026-08-28"
+  },
+  {
+    id: "movie-3",
+    title: "奧本海默：終局解密",
+    englishTitle: "Oppenheimer: The Secret Archive",
+    runtime: 142,
+    rating: "保護級",
+    posterUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=600&q=80",
+    backdropUrl: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1600&q=80",
+    genre: ["劇情", "歷史", "傳記"],
+    synopsis: "曼哈頓計畫未公開的深層博弈，重溫歷史轉折點的深沉張力。細膩的對話層次與震撼的試爆音場，考驗影廳聲學設計。",
+    recommendedFormat: ["IMAX", "Standard"],
+    releaseDate: "2026-08-15"
+  }
+];
+
+export const MOCK_HALLS: Hall[] = [
+  {
+    id: "tonlin-hall-1",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallNo: "1 廳 (旗艦全景聲大廳)",
+    seatCount: 288,
+    format: "Dolby Atmos",
+    hallSizeLevel: "巨大廳",
+    soundSystem: "Dolby Atmos 杜比全景聲 64 獨立聲道",
+    screenSpecs: "14 米 4K Barco 雷射銀幕 (高對比度)",
+    wheelchairSeats: 4,
+    laserProjection: true,
+    dataStatus: "verified",
+    source: "影城現場公告與影音規格認證",
+    verifiedAt: "2026-09-05",
+    specNotes: "統領威秀最大旗艦廳，階梯式座位視野無死角，排距 115cm，聲場包覆感全桃園頂級。"
+  },
+  {
+    id: "tonlin-hall-5",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallNo: "5 廳",
+    seatCount: 110,
+    format: "Standard",
+    hallSizeLevel: "標準廳",
+    soundSystem: "JBL 7.1 環繞聲道",
+    screenSpecs: "標準數位 2K 銀幕",
+    wheelchairSeats: 2,
+    laserProjection: false,
+    dataStatus: "verified",
+    source: "官方廳別座位表",
+    verifiedAt: "2026-09-05",
+    specNotes: "中小型精緻影廳，適合劇情類與非大型特效電影。"
+  },
+  {
+    id: "in89-hall-1",
+    theaterId: "in89-taoyuan",
+    hallNo: "1 廳 (LUXE 旗艦廳)",
+    seatCount: 236,
+    format: "Dolby Atmos",
+    hallSizeLevel: "中大廳",
+    soundSystem: "Dolby Atmos 全景聲 + 杜比全景聲震動座椅",
+    screenSpecs: "LUXE 終極高增益銀幕 (RealD 3D/2D 92% 反射率)",
+    wheelchairSeats: 4,
+    laserProjection: true,
+    dataStatus: "verified",
+    source: "in89 官方 LUXE 認證頁面",
+    verifiedAt: "2026-09-05",
+    specNotes: "配備觸發低頻震動的體感座椅，銀幕均勻度極高，聲光衝擊力強烈。"
+  },
+  {
+    id: "in89-hall-3",
+    theaterId: "in89-taoyuan",
+    hallNo: "3 廳",
+    seatCount: 88,
+    format: "Standard",
+    hallSizeLevel: "標準廳",
+    soundSystem: "5.1 聲道 (待官方更新)",
+    screenSpecs: "數位標準銀幕 (待官方確認)",
+    wheelchairSeats: 2,
+    laserProjection: false,
+    dataStatus: "unverified",
+    source: "影迷社群回報 (待官方客服確認)",
+    specNotes: "此廳硬體規格尚未完全官方驗證，排距與音效規格可致電影城客服再次確認。"
+  },
+  {
+    id: "linkou-imax",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallNo: "IMAX 廳 (4K 雷射巨幕)",
+    seatCount: 340,
+    format: "IMAX",
+    hallSizeLevel: "巨大廳",
+    soundSystem: "IMAX 12-Channel 新世代全方位環繞音響",
+    screenSpecs: "4K 雙雷射 IMAX 弧形巨幕 (高 13.6 米 x 寬 22 米)",
+    wheelchairSeats: 6,
+    laserProjection: true,
+    dataStatus: "verified",
+    source: "IMAX 官方授權認證名錄",
+    verifiedAt: "2026-09-05",
+    specNotes: "北台灣頂級商用 IMAX 巨幕，超廣視角與頂尖動態對比度，特效震撼首選。"
+  },
+  {
+    id: "linkou-4dx",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallNo: "4DX 廳 (動態體感)",
+    seatCount: 144,
+    format: "4DX",
+    hallSizeLevel: "標準廳",
+    soundSystem: "JBL 7.1 環繞聲",
+    screenSpecs: "4DX 動態專用銀幕 + 環境特效系統 (暴風雨/煙霧/氣味/震動)",
+    wheelchairSeats: 2,
+    laserProjection: false,
+    dataStatus: "verified",
+    source: "CJ 4DPLEX 官方認證",
+    verifiedAt: "2026-09-05",
+    specNotes: "全套動態座椅與環境特效，彷彿置身戰場，適合追求極限體感者。"
+  }
+];
+
+export const HALL_MAP = new Map<string, Hall>(
+  MOCK_HALLS.map((h) => [h.id, h])
+);
+
+// Realistic showtimes for testing all permutations
+export const MOCK_SHOWTIMES: Showtime[] = [
+  // Movie 1: 希望：末日血戰 (War of Hope)
+  // Today Afternoon (13:00 - 18:00)
+  {
+    id: "st-tonlin-101",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallId: "tonlin-hall-1",
+    startTime: "2026-09-05T14:15:00",
+    endTime: "2026-09-05T16:49:00",
+    standardPrice: 340,
+    promoPrice: 290,
+    promoDescription: "早場 & iShow 卡專屬現折 $50",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-in89-101",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "in89-taoyuan",
+    hallId: "in89-hall-1",
+    startTime: "2026-09-05T15:30:00",
+    endTime: "2026-09-05T18:04:00",
+    standardPrice: 350,
+    promoPrice: 280,
+    promoDescription: "玉山/中信影城聯名卡 8 折折抵",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-tonlin-102",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallId: "tonlin-hall-5",
+    startTime: "2026-09-05T13:40:00",
+    endTime: "2026-09-05T16:14:00",
+    standardPrice: 300,
+    promoPrice: 250,
+    promoDescription: "學生平日特惠票",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-in89-102",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "in89-taoyuan",
+    hallId: "in89-hall-3",
+    startTime: "2026-09-05T16:10:00",
+    endTime: "2026-09-05T18:44:00",
+    standardPrice: 280,
+    promoPrice: 230,
+    promoDescription: "限時超值特惠",
+    dataStatus: "unverified",
+    source: "社群情報（待確認場次）",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  // Cross-Region Linkou Showtimes (Afternoon)
+  {
+    id: "st-linkou-101",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallId: "linkou-imax",
+    startTime: "2026-09-05T15:00:00",
+    endTime: "2026-09-05T17:34:00",
+    standardPrice: 440,
+    promoPrice: 390,
+    promoDescription: "三井聯名卡 IMAX 現折 $50",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-linkou-102",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallId: "linkou-4dx",
+    startTime: "2026-09-05T14:00:00",
+    endTime: "2026-09-05T16:34:00",
+    standardPrice: 490,
+    promoPrice: 440,
+    promoDescription: "4DX 體感早場特惠",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+
+  // Today Evening (18:00 - 22:30)
+  {
+    id: "st-tonlin-103",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallId: "tonlin-hall-1",
+    startTime: "2026-09-05T19:20:00",
+    endTime: "2026-09-05T21:54:00",
+    standardPrice: 340,
+    promoPrice: 310,
+    promoDescription: "晚間會員累積點數折抵",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-in89-103",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "in89-taoyuan",
+    hallId: "in89-hall-1",
+    startTime: "2026-09-05T20:00:00",
+    endTime: "2026-09-05T22:34:00",
+    standardPrice: 350,
+    promoPrice: 295,
+    promoDescription: "指定銀行星光場折抵",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+
+  // Movie 2: 沙丘：第三部 (Dune 3)
+  {
+    id: "st-dune-201",
+    movieId: "movie-2",
+    movieTitle: "沙丘：第三部",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallId: "tonlin-hall-1",
+    startTime: "2026-09-05T16:50:00",
+    endTime: "2026-09-05T19:38:00",
+    standardPrice: 350,
+    promoPrice: 300,
+    promoDescription: "磅礴史詩特映優惠",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-dune-202",
+    movieId: "movie-2",
+    movieTitle: "沙丘：第三部",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallId: "linkou-imax",
+    startTime: "2026-09-05T18:00:00",
+    endTime: "2026-09-05T20:48:00",
+    standardPrice: 450,
+    promoPrice: 400,
+    promoDescription: "IMAX 沙漠全幅視野套票",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+
+  // Movie 3: 奧本海默：終局解密
+  {
+    id: "st-opp-301",
+    movieId: "movie-3",
+    movieTitle: "奧本海默：終局解密",
+    theaterId: "in89-taoyuan",
+    hallId: "in89-hall-1",
+    startTime: "2026-09-05T13:00:00",
+    endTime: "2026-09-05T15:22:00",
+    standardPrice: 330,
+    promoPrice: 280,
+    promoDescription: "傳記特映回饋",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  // Tomorrow Afternoon (2026-09-06)
+  {
+    id: "st-tonlin-tomorrow-1",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-taoyuan-tonlin",
+    hallId: "tonlin-hall-1",
+    startTime: "2026-09-06T14:40:00",
+    endTime: "2026-09-06T17:14:00",
+    standardPrice: 340,
+    promoPrice: 290,
+    promoDescription: "週日早午場會員現折",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-linkou-tomorrow-imax",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallId: "linkou-imax",
+    startTime: "2026-09-06T15:20:00",
+    endTime: "2026-09-06T17:54:00",
+    standardPrice: 440,
+    promoPrice: 390,
+    promoDescription: "三井假日暢遊套票",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+  {
+    id: "st-in89-tomorrow-1",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "in89-taoyuan",
+    hallId: "in89-hall-1",
+    startTime: "2026-09-06T16:00:00",
+    endTime: "2026-09-06T18:34:00",
+    standardPrice: 350,
+    promoPrice: 280,
+    promoDescription: "站前假日影迷專案",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  },
+
+  // Weekend Special Screenings (2026-09-06 / 2026-09-07)
+  {
+    id: "st-linkou-weekend-4dx",
+    movieId: "movie-1",
+    movieTitle: "希望：末日血戰",
+    theaterId: "vscinemas-linkou-mitsui",
+    hallId: "linkou-4dx",
+    startTime: "2026-09-06T19:30:00",
+    endTime: "2026-09-06T22:04:00",
+    standardPrice: 490,
+    promoPrice: 440,
+    promoDescription: "週末體感狂潮夜場折抵",
+    dataStatus: "mock",
+    source: "Mock Seed (展示演算法流程)",
+    fetchedAt: "2026-09-05T08:00:00"
+  }
+];
+
