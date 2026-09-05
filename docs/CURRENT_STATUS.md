@@ -20,9 +20,21 @@ Read in this order:
 ### Authority map
 - Collaboration rules: `AI_COLLABORATION_RULES.md`
 - Product rules: `docs/PRODUCT_RULES.md`
-- UI/UX: `docs/MOVIE_HALL_FINDER_UI_UX_REVISION_V2.1.md`
+- UI/UX authoritative spec: `docs/MOVIE_HALL_FINDER_UI_UX_REVISION_V2.1.md`
+- Current UI polish candidate: `docs/MOVIE_HALL_FINDER_UI_UX_POLISH_V2.1.1.md`
 - Current screenshots: `docs/screenshots/`
 - Historical material: `docs/archive/` and older V1/V2 specs
+
+### Candidate workflow
+`V2.1.1` is the **current UI polish candidate / next refinement target**, but it is **not authoritative yet**.
+
+Rules:
+- V2.1 remains the authoritative UI/UX specification.
+- V2.1.1 may be used for the next polish implementation pass when Jerry explicitly asks to proceed.
+- V2.1.1 must not silently override V2.1 product rules or core flow.
+- After implementation, update screenshots and run the review gate.
+- Promotion to authoritative status requires explicit human approval.
+- If promoted, update this file in the same change.
 
 ### Maintenance rule
 Whenever a newer authoritative product/UI/architecture spec is intentionally created, merged, or promoted, the same work must update this file so this authority map never points to an older version.
@@ -40,8 +52,9 @@ At the start of every task, the agent should:
 2. Read the authoritative files above.
 3. Inspect repo root and `docs/` for newer non-archived spec/status files.
 4. If a newer-looking file exists but is not listed here, treat it as a **candidate**, not automatically authoritative; report the inconsistency first.
-5. Never use `docs/archive/` as the current source.
-6. Re-read this file after pulling/refreshing the repo if another AI may have changed documentation.
+5. If a candidate is explicitly registered in this file, preserve its candidate status unless human approval promotes it.
+6. Never use `docs/archive/` as the current source.
+7. Re-read this file after pulling/refreshing the repo if another AI may have changed documentation.
 
 This prevents an AI from silently continuing from an old prompt or an old V1/V2 document.
 
@@ -103,8 +116,8 @@ Deep-night cinema mood:
 Avoid dashboard, finance-app, neon-tech, and esports aesthetics.
 
 ## Immediate implementation target
-Implement V2.1 as a refinement of the existing app, not a product rewrite.
-Priority is to simplify the homepage and move all recommendation content behind the search action while preserving existing recommendation capabilities.
+Use V2.1 as the product/UI authority and apply `MOVIE_HALL_FINDER_UI_UX_POLISH_V2.1.1.md` as the next polish pass only when explicitly requested.
+The V2.1.1 pass should refine visual hierarchy and current screenshots without changing the core product flow or recommendation model.
 
 ## Current screenshot set
 Fresh screenshots are organized under `docs/screenshots/`.
