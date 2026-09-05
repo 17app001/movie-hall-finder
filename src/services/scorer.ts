@@ -1,4 +1,5 @@
 import {
+  AdditivePoint,
   FilterPreferences,
   Hall,
   Movie,
@@ -221,6 +222,36 @@ export function calculateRecommendation(
     transitConvenience: transitScore
   };
 
+  // 評分拆解加分值 (Additive Breakdown - P1 & Review 7.4)
+  const pSize = Math.round((hallSizeScore * wHall) / totalWeight);
+  const pFormat = Math.round((specialFormatScore * wFormat) / totalWeight);
+  const pTime = Math.round((timeSlotScore * wTime) / totalWeight);
+  const pTransit = Math.round((transitScore * wTransit) / totalWeight);
+  const pPromoPrice = Math.round(((priceScore * wPrice) + (promoScore * wPromo)) / totalWeight);
+
+  const additivePoints: AdditivePoint[] = [
+    { label: "大廳", points: pSize, tag: `+${pSize} 大廳`, type: "hall" },
+    { label: hall?.format || "規格", points: pFormat, tag: `+${pFormat} ${hall?.format === "Standard" ? "標準" : (hall?.format || "音畫")}`, type: "format" },
+    { label: "時間", points: pTime, tag: `+${pTime} 時間`, type: "time" },
+    { label: "距離", points: pTransit, tag: `+${pTransit} 距離`, type: "transit" },
+    { label: "優惠", points: pPromoPrice, tag: `+${pPromoPrice} 優惠`, type: "promo" }
+  ];
+
+  // 一句人話推薦理由 (Review 2.C & 10)
+  let humanSummary = "";
+  if (hall?.id === "tonlin-hall-1") {
+    humanSummary = "大廳、時間剛好，全桃最大 288 席旗艦廳，下班出站 3 分鐘直接享受杜比全景聲。";
+  } else if (hall?.id === "in89-hall-1") {
+    humanSummary = "站前正對面，LUXE 終極銀幕搭配重低音震動椅，動作體感最過癮。";
+  } else if (hall?.id === "linkou-imax") {
+    humanSummary = "北台灣頂級 4K 雙雷射 340 席巨幕，沉浸視野無可匹敵，最值得特地跨區看一場。";
+  } else {
+    const hallDesc = hall?.seatCount && hall.seatCount >= 200 ? "大廳" : hall?.format && hall.format !== "Standard" ? `${hall.format}廳` : "環境舒適";
+    const timeDesc = timeSlotScore >= 80 ? "時間剛好" : "時段彈性";
+    const priceDesc = effectivePrice <= 300 ? "而且票價優惠超值" : "音畫規格極高";
+    humanSummary = `${hallDesc}、${timeDesc}，${priceDesc}。`;
+  }
+
   return {
     showtime,
     theater,
@@ -230,7 +261,9 @@ export function calculateRecommendation(
     recommendReasons: reasons.slice(0, 4), // 挑選前 4 大核心理由，俐落好讀
     confidence,
     warnings,
-    breakdown
+    breakdown,
+    additivePoints,
+    humanSummary
   };
 }
 

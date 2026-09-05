@@ -89,6 +89,13 @@ export interface ScoreBreakdown {
   transitConvenience: number; // 10%
 }
 
+export interface AdditivePoint {
+  label: string;
+  points: number;
+  tag: string;
+  type: "hall" | "format" | "time" | "price" | "promo" | "transit";
+}
+
 export interface RecommendationResult {
   showtime: Showtime;
   theater: Theater;
@@ -99,6 +106,8 @@ export interface RecommendationResult {
   confidence: "high" | "medium" | "low";
   warnings: string[];
   breakdown: ScoreBreakdown;
+  additivePoints: AdditivePoint[];
+  humanSummary: string;
   isTopPick?: boolean;
 }
 

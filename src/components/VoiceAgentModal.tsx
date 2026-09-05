@@ -86,19 +86,24 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
-        <div className="flex items-center gap-3 mb-5">
+        {/* Modal Header (Review Section 5) */}
+        <div className="flex items-center gap-3 mb-4">
           <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-glow-neon">
-            <Sparkles className="w-6 h-6" />
+            <Sparkles className="w-6 h-6 text-amber-300" />
           </div>
           <div>
             <span className="text-[11px] font-mono font-bold text-indigo-400 uppercase tracking-wider">
-              OpenAI Realtime Voice Agent 模擬
+              影城規格自動補查系統
             </span>
             <h2 className="text-xl font-black text-white flex items-center gap-2">
-              <span>影城客服 AI 外呼補問</span>
+              <span>幫我確認影城規格</span>
             </h2>
           </div>
+        </div>
+
+        {/* Friendly User Explanation Strip (Review Section 5) */}
+        <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/25 mb-4 text-xs text-indigo-200 leading-relaxed">
+          💡 <strong>系統正在幫你確認：</strong>系統會透過公開資訊與影城自動電話查詢補充未驗證規格（如真實座位數、音效與放映設備），核實後即時更新評分，無須自行撥打電話。
         </div>
 
         {/* Audio Wave Simulation Strip */}

@@ -43,6 +43,7 @@ export function App() {
   const [inspectingHallId, setInspectingHallId] = useState<string | null>(null);
   const [isTheaterGuideOpen, setIsTheaterGuideOpen] = useState(false);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [selectedCompareHallId, setSelectedCompareHallId] = useState<string | null>(null);
   const [voiceAgentTask, setVoiceAgentTask] = useState<MissingInfoTask | null>(null);
 
   // Deep linking for automated visual screenshots and QA
@@ -125,7 +126,10 @@ export function App() {
             recommendation={topPick}
             onInspectHall={(hallId) => setInspectingHallId(hallId)}
             onOpenTheaterGuide={() => setIsTheaterGuideOpen(true)}
-            onOpenCompareModal={() => setIsCompareModalOpen(true)}
+            onOpenCompareModal={() => {
+              setSelectedCompareHallId(topPick.hall?.id || null);
+              setIsCompareModalOpen(true);
+            }}
           />
         ) : (
           <div className="glass-panel rounded-3xl p-10 text-center text-slate-400 mb-8 border border-white/10">
@@ -141,6 +145,10 @@ export function App() {
         <ShowtimeList
           candidates={candidateList}
           onInspectHall={(hallId) => setInspectingHallId(hallId)}
+          onOpenCompareModal={(hallId) => {
+            setSelectedCompareHallId(hallId || null);
+            setIsCompareModalOpen(true);
+          }}
         />
 
         {/* Missing Info / Voice Agent Query Panel */}
@@ -150,8 +158,49 @@ export function App() {
         />
       </main>
 
+      {/* Mobile Sticky Quick Action Bar (Review Section 7.1 Mobile First) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-cinema-950/95 backdrop-blur-xl border-t border-white/10 px-4 py-2.5 flex items-center justify-around shadow-2xl">
+        <button
+          onClick={() => {
+            const el = document.getElementById("top-pick-section");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+          className="flex flex-col items-center text-amber-400 font-bold text-[10px]"
+        >
+          <Film className="w-4 h-4 mb-0.5" />
+          <span>今日首選</span>
+        </button>
+
+        <button
+          onClick={() => setIsCompareModalOpen(true)}
+          className="flex flex-col items-center text-slate-300 font-bold text-[10px] hover:text-white"
+        >
+          <span className="text-amber-400 font-black text-xs">VS</span>
+          <span>影廳 PK</span>
+        </button>
+
+        <button
+          onClick={() => setIsTheaterGuideOpen(true)}
+          className="flex flex-col items-center text-slate-300 font-bold text-[10px] hover:text-white"
+        >
+          <span className="text-amber-400 font-black text-xs">🗺️</span>
+          <span>影城導覽</span>
+        </button>
+
+        <button
+          onClick={() => setVoiceAgentTask(missingTasks[0])}
+          className="flex flex-col items-center text-indigo-300 font-bold text-[10px] hover:text-white relative"
+        >
+          <span className="text-indigo-400 font-black text-xs">✨</span>
+          <span>幫我確認</span>
+          {pendingTasksCount > 0 && (
+            <span className="absolute -top-1 right-1 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          )}
+        </button>
+      </div>
+
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-white/10 bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500 mb-14 sm:mb-0">
         <div className="max-w-7xl mx-auto space-y-2">
           <p className="font-semibold text-slate-400">
             Movie Hall Finder (最佳影廳挑選器) · 桃園 / 林口跨區 Web POC v1.1
@@ -192,7 +241,11 @@ export function App() {
 
       <HallCompareModal
         isOpen={isCompareModalOpen}
-        onClose={() => setIsCompareModalOpen(false)}
+        onClose={() => {
+          setIsCompareModalOpen(false);
+          setSelectedCompareHallId(null);
+        }}
+        initialHallId={selectedCompareHallId || undefined}
       />
     </div>
   );

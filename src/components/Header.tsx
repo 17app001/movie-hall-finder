@@ -32,9 +32,15 @@ export const Header: React.FC<HeaderProps> = ({
                   </span>
                 </h1>
               </div>
-              <p className="text-xs sm:text-sm text-slate-400 font-medium">
-                拒絕坐小廳、踩雷爛音響 · 專為影迷挑選「最值得去的那一場」
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
+                <p className="text-xs sm:text-sm text-amber-300 font-bold">
+                  不用自己查半天，我幫你挑今天最值得看的那一場。
+                </p>
+                <span className="hidden sm:inline text-white/30">|</span>
+                <p className="text-[11px] sm:text-xs text-slate-400">
+                  比大廳、音效、時間、價格和距離，一次幫你選好
+                </p>
+              </div>
             </div>
           </div>
 
@@ -56,14 +62,14 @@ export const Header: React.FC<HeaderProps> = ({
               <span>影城導覽 (桃園/林口)</span>
             </button>
 
-            {/* AI Voice Agent / Missing Info Simulator */}
+            {/* Rebranded: 幫我確認影城規格 (AI 客服自動補查) */}
             <button
               onClick={onOpenVoiceAgent}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-800/80 hover:to-purple-800/80 border border-indigo-500/30 hover:border-indigo-400 text-xs font-semibold text-indigo-200 transition-all relative shadow-sm"
-              title="模擬 AI Voice Agent 客服自動外呼補查未知影廳規格"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-900/70 to-purple-900/70 hover:from-indigo-800/90 hover:to-purple-800/90 border border-indigo-500/40 hover:border-indigo-400 text-xs font-semibold text-indigo-200 transition-all relative shadow-sm"
+              title="由 AI 客服自動向影城查詢補充未確認之影廳規格（座位數、音響）"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-              <span>AI 客服外呼補問</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+              <span>幫我確認影廳規格</span>
               {pendingTasksCount > 0 && (
                 <span className="ml-1 px-1.5 py-0.2 rounded-full bg-amber-500 text-black text-[10px] font-bold">
                   {pendingTasksCount}

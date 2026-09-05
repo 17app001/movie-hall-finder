@@ -2,10 +2,10 @@ import React from "react";
 import { MissingInfoTask } from "../types";
 import {
   Sparkles,
-  PhoneCall,
   CheckCircle2,
   Clock,
-  ArrowRight
+  ArrowRight,
+  ShieldCheck
 } from "lucide-react";
 
 interface MissingInfoPanelProps {
@@ -29,14 +29,14 @@ export const MissingInfoPanel: React.FC<MissingInfoPanelProps> = ({
               <Sparkles className="w-4 h-4" />
             </span>
             <h3 className="text-lg font-black text-white">
-              影城規格補問中心 (Missing Spec Tasks)
+              影城規格補查中心（幫我問影城）
             </h3>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-              AI / 人工客服待查
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
+              AI 自動電話查詢
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            遵循「資料可以少，但不能假」原則。當硬體資料不齊全時，列入補查任務，不臆測數據。
+            資料可以少，但不能假。缺少影廳規格時，由系統代你向影城客服核實，絕不胡亂猜測。
           </p>
         </div>
       </div>
@@ -67,11 +67,11 @@ export const MissingInfoPanel: React.FC<MissingInfoPanelProps> = ({
 
                 {isResolved ? (
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-md">
-                    <CheckCircle2 className="w-3 h-3" /> 已核實
+                    <CheckCircle2 className="w-3 h-3" /> 已核實更新
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-md">
-                    <Clock className="w-3 h-3" /> 待外呼補問
+                    <Clock className="w-3 h-3" /> 待補查
                   </span>
                 )}
               </div>
@@ -82,22 +82,22 @@ export const MissingInfoPanel: React.FC<MissingInfoPanelProps> = ({
 
               <div className="flex items-center justify-between pt-1">
                 <span className="text-[11px] text-slate-400 font-mono">
-                  官方客服: {task.suggestedPhone}
+                  客服專線: {task.suggestedPhone}
                 </span>
 
                 {!isResolved ? (
                   <button
                     onClick={() => onStartVoiceCall(task)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-glow-neon transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-glow-neon transition-all"
                   >
-                    <PhoneCall className="w-3 h-3 text-amber-300" />
-                    <span>模擬 AI 外呼電話</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                    <span>幫我確認</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 ) : (
                   <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    資料庫已更新
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    資料庫已核實
                   </span>
                 )}
               </div>
