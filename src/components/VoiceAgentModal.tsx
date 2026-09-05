@@ -106,7 +106,7 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
             <div>
               <div className="text-xs font-bold text-white">{task.theaterName}</div>
               <div className="text-[11px] text-slate-400">
-                {isCalling ? "正在確認中..." : isDone ? "✅ 已確認完成" : "準備通話"}
+                {isCalling ? "正在幫你確認..." : isDone ? "✅ 已確認" : "準備通話"}
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
               }`}
             >
               <div className="text-[10px] font-bold text-slate-400 mb-0.5">
-                {msg.sender === "ai" ? "🤖 系統智能助手" : `🏢 ${task.theaterName} 客服`}
+                {msg.sender === "ai" ? "📞 正在向影城確認" : `🏢 ${task.theaterName} 客服`}
               </div>
               <p className="leading-relaxed">{msg.text}</p>
             </div>
@@ -148,7 +148,7 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
         {isDone && (
           <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>已確認完成！資料庫狀態已即時更新，推薦分數已重新計算。</span>
+            <span>已確認！資料庫狀態已即時更新，推薦分數已重新計算。</span>
           </div>
         )}
 

@@ -117,6 +117,7 @@ export function App() {
     let count = 0;
     if (preferences.preferLargeHall) count++;
     if (preferences.preferSpecialFormat) count++;
+    if (preferences.preferTimeStrict) count++;
     if (preferences.preferPromoPrice) count++;
     if (preferences.allowCrossRegion) count++;
     return count;

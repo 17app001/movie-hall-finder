@@ -100,7 +100,32 @@ export const PreferenceDrawer: React.FC<PreferenceDrawerProps> = ({
                 </div>
               </div>
 
-              {/* Option 3: 便宜最重要 */}
+              {/* Option 3: 時間最重要 */}
+              <div
+                onClick={() => updatePreference("preferTimeStrict", !preferences.preferTimeStrict)}
+                className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  preferences.preferTimeStrict
+                    ? "bg-amber-500/15 border-amber-500/40 text-white"
+                    : "bg-cinema-950/60 border-white/5 text-slate-300 hover:border-white/15"
+                }`}
+              >
+                <div className="flex items-center space-x-2.5 flex-1 min-w-0">
+                  <span className="text-lg shrink-0">🕒</span>
+                  <div className="min-w-0">
+                    <div className="text-sm font-bold text-white">時間最重要</div>
+                    <div className="text-xs text-slate-400 truncate">嚴格鎖定指定時段，不跨時段延後</div>
+                  </div>
+                </div>
+                <div
+                  className={`w-5 h-5 shrink-0 rounded-full flex items-center justify-center ${
+                    preferences.preferTimeStrict ? "bg-amber-500 text-cinema-950 font-bold" : "border border-white/20"
+                  }`}
+                >
+                  {preferences.preferTimeStrict && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                </div>
+              </div>
+
+              {/* Option 4: 便宜最重要 */}
               <div
                 onClick={() => updatePreference("preferPromoPrice", !preferences.preferPromoPrice)}
                 className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${

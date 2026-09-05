@@ -6,11 +6,11 @@ import {
 import {
   Sparkles,
   SlidersHorizontal,
-  ChevronDown,
   Film,
   MapPin,
   Clock,
-  RotateCcw
+  RotateCcw,
+  Search
 } from "lucide-react";
 
 interface FilterBarProps {
@@ -36,6 +36,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onOpenPreferences,
   activePreferencesCount
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const currentMovie = movies.find((m) => m.id === preferences.movieId) || movies[0];
 
   const updatePreference = <K extends keyof FilterPreferences>(
@@ -48,8 +49,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     });
   };
 
-  const regionLabel = preferences.region === "taoyuan" ? "桃園" : preferences.region === "linkou" ? "林口" : "附近皆可";
-  const timeLabel = preferences.dateSlot === "today-afternoon" ? "現在/下午" : preferences.dateSlot === "today-evening" ? "今晚" : "明天";
+  const regionLabel = preferences.region === "taoyuan" ? "桃園" : preferences.region === "linkou" ? "林口" : "附近";
+  const timeLabel = preferences.dateSlot === "today-afternoon" ? "現在" : preferences.dateSlot === "today-evening" ? "今晚" : preferences.dateSlot === "tomorrow-afternoon" ? "明天" : "自訂";
+
+  const filteredMovies = movies.filter((m) =>
+    m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    m.englishTitle.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Mode 2: Results Mode — Compact Query Header (V2.1 Section 4)
   if (isResultsMode) {
@@ -118,24 +124,47 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {/* 3 Core Selection Box */}
       <div className="bg-cinema-900 border border-white/[0.08] rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4">
         {/* 1. 電影 (Movie) */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            <Film className="w-3.5 h-3.5 text-amber-400" />
-            <span>想看電影</span>
-          </label>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+              <Film className="w-3.5 h-3.5 text-amber-400" />
+              <span>想看電影</span>
+            </label>
+            <span className="text-[11px] text-amber-400 font-semibold truncate max-w-[200px]">
+              已選：{currentMovie.title}
+            </span>
+          </div>
+
           <div className="relative">
-            <select
-              value={preferences.movieId}
-              onChange={(e) => updatePreference("movieId", e.target.value)}
-              className="w-full appearance-none bg-cinema-950 border border-white/10 rounded-2xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:border-amber-400 transition-all cursor-pointer truncate pr-9"
-            >
-              {movies.map((m) => (
-                <option key={m.id} value={m.id} className="bg-cinema-950 text-white">
-                  {m.title} ({m.rating})
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="搜尋電影名稱"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-cinema-950 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-bold text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
+            />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Trending / Filtered Movie Quick Select Pills */}
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
+            {(filteredMovies.length > 0 ? filteredMovies : movies).map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => {
+                  updatePreference("movieId", m.id);
+                  setSearchQuery("");
+                }}
+                className={`px-3 py-1.5 text-xs rounded-xl border transition-all truncate max-w-full ${
+                  preferences.movieId === m.id
+                    ? "bg-amber-500 text-cinema-950 font-black border-amber-500 shadow-sm"
+                    : "bg-cinema-950/80 text-slate-300 border-white/10 hover:border-white/20"
+                }`}
+              >
+                {m.title}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -177,18 +206,18 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              附近皆可
+              附近
             </button>
           </div>
         </div>
 
-        {/* 3. 時間 (Time) */}
+        {/* 3. 時間 (Time) - 現在 / 今晚 / 明天 / 自訂 */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
             <span>什麼時間</span>
           </label>
-          <div className="grid grid-cols-3 gap-2 bg-cinema-950 p-1.5 rounded-2xl border border-white/10">
+          <div className="grid grid-cols-4 gap-1.5 bg-cinema-950 p-1.5 rounded-2xl border border-white/10">
             <button
               type="button"
               onClick={() => updatePreference("dateSlot", "today-afternoon")}
@@ -198,7 +227,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              現在 / 下午
+              現在
             </button>
             <button
               type="button"
@@ -221,6 +250,17 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               }`}
             >
               明天
+            </button>
+            <button
+              type="button"
+              onClick={() => updatePreference("dateSlot", "custom")}
+              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                preferences.dateSlot === "custom" || preferences.dateSlot === "weekend"
+                  ? "bg-amber-500 text-cinema-950 shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              自訂
             </button>
           </div>
         </div>

@@ -15,7 +15,7 @@ const targetUrl = 'https://17app001.github.io/movie-hall-finder/';
 function downloadQRCodes() {
   return new Promise((resolve) => {
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data=${encodeURIComponent(targetUrl)}`;
-    const localQrPath = path.join(workspaceDir, 'qrcode_github_pages.png');
+    const localQrPath = path.join(workspaceDir, 'docs', 'screenshots', 'mobile', 'qrcode_github_pages.png');
     const file = fs.createWriteStream(localQrPath);
 
     https.get(qrUrl, (res) => {
@@ -75,6 +75,11 @@ function checkReady(attempts = 0) {
 }
 
 async function captureAll() {
+  const mobileDir = path.join(workspaceDir, 'docs', 'screenshots', 'mobile');
+  const desktopDir = path.join(workspaceDir, 'docs', 'screenshots', 'desktop');
+  fs.mkdirSync(mobileDir, { recursive: true });
+  fs.mkdirSync(desktopDir, { recursive: true });
+
   await downloadQRCodes();
 
   const destDirs = [
@@ -84,48 +89,57 @@ async function captureAll() {
   ];
 
   for (const base of destDirs) {
-    fs.mkdirSync(path.join(base, '01_手機版_Mobile'), { recursive: true });
-    fs.mkdirSync(path.join(base, '02_電腦版_Desktop'), { recursive: true });
-    fs.mkdirSync(path.join(base, '03_手機掃碼測試_QRCode'), { recursive: true });
+    try {
+      fs.mkdirSync(path.join(base, '01_手機版_Mobile'), { recursive: true });
+      fs.mkdirSync(path.join(base, '02_電腦版_Desktop'), { recursive: true });
+      fs.mkdirSync(path.join(base, '03_手機掃碼測試_QRCode'), { recursive: true });
+    } catch (e) {}
   }
 
   for (const v of views) {
-    const localPath = path.join(workspaceDir, v.name);
+    const subFolder = v.category === 'mobile' ? 'mobile' : 'desktop';
+    const localPath = path.join(workspaceDir, 'docs', 'screenshots', subFolder, v.name);
     const cmd = `"${chromePath}" --headless=new --disable-gpu --screenshot="${localPath}" --window-size=${v.size} "${v.url}"`;
     console.log(`Capturing [${v.size}]:`, v.name, 'from', v.url);
     try {
       execSync(cmd);
-      console.log('  -> Saved to local workspace:', v.name);
+      console.log('  -> Saved to local workspace:', localPath);
 
       // Copy to Artifact Directory
-      fs.copyFileSync(localPath, path.join(artifactDir, v.name));
+      try {
+        fs.copyFileSync(localPath, path.join(artifactDir, v.name));
+      } catch (e) {}
 
       // Copy to Cloud Drive folders
-      const subFolder = v.category === 'mobile' ? '01_手機版_Mobile' : '02_電腦版_Desktop';
+      const cloudSub = v.category === 'mobile' ? '01_手機版_Mobile' : '02_電腦版_Desktop';
       for (const base of destDirs) {
-        // Flat copy
-        fs.copyFileSync(localPath, path.join(base, v.name));
-        // Categorized copy with English name
-        fs.copyFileSync(localPath, path.join(base, subFolder, v.name));
-        // Categorized copy with friendly Chinese name
-        fs.copyFileSync(localPath, path.join(base, subFolder, v.chinese));
+        try {
+          // Flat copy
+          fs.copyFileSync(localPath, path.join(base, v.name));
+          // Categorized copy with English name
+          fs.copyFileSync(localPath, path.join(base, cloudSub, v.name));
+          // Categorized copy with friendly Chinese name
+          fs.copyFileSync(localPath, path.join(base, cloudSub, v.chinese));
+        } catch (e) {}
       }
     } catch (e) {
       console.error('Failed to capture', v.name, e.message);
     }
   }
 
-  // Copy QR Codes
-  const qrLocal = path.join(workspaceDir, 'qrcode_github_pages.png');
+  // Copy QR Codes to Cloud
+  const qrLocal = path.join(workspaceDir, 'docs', 'screenshots', 'mobile', 'qrcode_github_pages.png');
   if (fs.existsSync(qrLocal)) {
     for (const base of destDirs) {
-      fs.copyFileSync(qrLocal, path.join(base, 'qrcode_mobile.png'));
-      fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', '01_GitHub_Pages全球CDN通道_QR.png'));
-      fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', 'qrcode_mobile.png'));
+      try {
+        fs.copyFileSync(qrLocal, path.join(base, 'qrcode_mobile.png'));
+        fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', '01_GitHub_Pages全球CDN通道_QR.png'));
+        fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', 'qrcode_mobile.png'));
+      } catch (e) {}
     }
   }
 
-  console.log('\nAll V2 Niko Review Gate captures completed successfully!');
+  console.log('\nAll V2.1 Niko Review Gate captures completed successfully!');
   preview.kill();
   process.exit(0);
 }

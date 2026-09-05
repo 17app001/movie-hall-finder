@@ -70,7 +70,7 @@ export interface Movie {
   releaseDate: string;
 }
 
-export type DateSlot = "today-afternoon" | "today-evening" | "tomorrow-afternoon" | "weekend";
+export type DateSlot = "today-afternoon" | "today-evening" | "tomorrow-afternoon" | "weekend" | "custom";
 
 export interface FilterPreferences {
   movieId: string;
@@ -80,6 +80,7 @@ export interface FilterPreferences {
   preferSpecialFormat: boolean;
   preferPromoPrice: boolean;
   allowCrossRegion: boolean;
+  preferTimeStrict?: boolean;
   sortBy: "score" | "time" | "price";
 }
 

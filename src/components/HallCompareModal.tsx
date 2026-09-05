@@ -205,7 +205,7 @@ export const HallCompareModal: React.FC<HallCompareModalProps> = ({
             <span>🏆 綜合推薦：{overallWinner.shortName}</span>
           </div>
           <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-            如果你在意整體爽度與距離，選 {hallA.shortName}；如果想要極致巨幕體驗，選 {hallB.shortName}。
+            一句人話：<strong>想看得爽選 {hallA.shortName}；想省錢選 {hallB.shortName}。</strong>
           </p>
         </div>
 
@@ -299,6 +299,19 @@ export const HallCompareModal: React.FC<HallCompareModalProps> = ({
                 ) : (
                   <span className="text-slate-400">{hallB.priceDesc}</span>
                 )}
+              </div>
+            </div>
+
+            {/* 5. 🕒 場次時間 */}
+            <div className="grid grid-cols-3 items-center py-2.5 px-3.5">
+              <span className="font-semibold text-slate-300 flex items-center gap-1">
+                <span>🕒</span> 場次時間
+              </span>
+              <div className="text-center font-bold">
+                <span className="text-amber-400">🏆 15:40 (勝)</span>
+              </div>
+              <div className="text-center font-bold">
+                <span className="text-slate-400">16:10</span>
               </div>
             </div>
           </div>
