@@ -16,35 +16,40 @@
 
 ### 1. 首頁純搜尋入口 (`mobile_01_homepage.png`)
 首頁僅保留 3 步極簡選擇（電影、地點、時間）與主要 CTA「幫我挑一場 ✨」，徹底告別後台資訊儀表板感。
-![首頁極簡搜尋入口](./mobile_01_homepage.png)
+![首頁極簡搜尋入口](docs/screenshots/mobile/mobile_01_homepage.png)
 
 ### 2. 搜尋結果 Top Pick 英雄卡 (`mobile_02_search_result_top_pick.png`)
 點擊「幫我挑一場」後進入決策模式，首屏即呈現今日最值得看首選、海報、時間、影城、影廳、人話推薦短評與直覺操作。
-![搜尋結果 Top Pick 英雄卡](./mobile_02_search_result_top_pick.png)
+![搜尋結果 Top Pick 英雄卡](docs/screenshots/mobile/mobile_02_search_result_top_pick.png)
 
 ### 3. 想更合你胃口？生活化偏好設定 (`mobile_03_preference_drawer.png`)
 5 項人話生活化偏好（我就是要大廳、音效畫質優先、便宜最重要、不要跑太遠），隨選隨排。
-![想更合你胃口偏好抽屜](./mobile_03_preference_drawer.png)
+![想更合你胃口偏好抽屜](docs/screenshots/mobile/mobile_03_preference_drawer.png)
 
 ### 4. 兩場直接 PK 勝負對決 (`mobile_04_hall_pk.png`)
 不用查複雜數據，先給結論與勝負對決表（想看得爽選 A，想省錢選 B）。
-![兩場直接 PK](./mobile_04_hall_pk.png)
+![兩場直接 PK](docs/screenshots/mobile/mobile_04_hall_pk.png)
 
 ### 5. 影廳詳情與帝王位 (`mobile_05_hall_detail.png`)
 人話標題「桃園站前的大型主力廳」，提供最佳座位觀影角度與官方認證硬體規格。
-![影廳詳情與帝王位](./mobile_05_hall_detail.png)
+![影廳詳情與帝王位](docs/screenshots/mobile/mobile_05_hall_detail.png)
 
 ### 6. 去這間影城出遊指南 (`mobile_06_theater_guide.png`)
 看電影必備三大情報：🚗 怎麼去 / 🅿️ 停哪裡（折抵規則）/ 🍜 看完吃什麼。
-![去這間影城出遊指南](./mobile_06_theater_guide.png)
+![去這間影城出遊指南](docs/screenshots/mobile/mobile_06_theater_guide.png)
 
 ### 7. 幫我問影城 (`mobile_07_ask_theater.png`)
 規格有缺漏時，提供安心的官方確認機制，不盲猜不造假。
-![幫我問影城](./mobile_07_ask_theater.png)
+![幫我問影城](docs/screenshots/mobile/mobile_07_ask_theater.png)
 
 ### 8. 電腦版全景 (`desktop_01_main.png`)
 支援桌面大螢幕高解析度自適應佈局。
-![電腦版全景](./desktop_01_main.png)
+![電腦版全景](docs/screenshots/desktop/desktop_01_main.png)
+
+> 💡 **截圖目錄規範**：
+> - 手機版最新截圖：[`docs/screenshots/mobile/`](./docs/screenshots/mobile/)
+> - 電腦版最新截圖：[`docs/screenshots/desktop/`](./docs/screenshots/desktop/)
+> - V1 歷史截圖存檔：[`docs/archive/screenshots-v1/`](./docs/archive/screenshots-v1/)
 
 ---
 

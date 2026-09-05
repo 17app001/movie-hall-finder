@@ -82,19 +82,31 @@ Implement V2.1 as a refinement of the existing app, not a product rewrite.
 Priority is to simplify the homepage and move all recommendation content behind the search action while preserving existing recommendation capabilities.
 
 ## Review gate after implementation
-Provide fresh screenshots for:
-- homepage
-- search result Top Pick
-- preference drawer
-- Hall PK
-- hall detail
-- theater guide
-- Ask Theater
-- desktop main view
+Fresh screenshots are organized under `docs/screenshots/`:
+- **Mobile (`docs/screenshots/mobile/`)**:
+  - `mobile_01_homepage.png`: Homepage (pure 3-step search entry)
+  - `mobile_02_search_result_top_pick.png`: Top Pick hero card after search
+  - `mobile_03_preference_drawer.png`: Preference drawer
+  - `mobile_04_hall_pk.png`: Hall comparison PK
+  - `mobile_05_hall_detail.png`: Hall detail & king seat
+  - `mobile_06_theater_guide.png`: Theater outing guide (transit, parking, food)
+  - `mobile_07_ask_theater.png`: Ask Theater official check
+  - `qrcode_github_pages.png`: Mobile test QR code
+- **Desktop (`docs/screenshots/desktop/`)**:
+  - `desktop_01_main.png`: Desktop full responsive view
+  - `desktop_02_hall_pk.png`: Desktop Hall PK
+  - `desktop_03_hall_spec.png`: Desktop Hall Spec
+  - `desktop_04_theater_guide.png`: Desktop Theater Guide
+  - `desktop_05_ask_theater.png`: Desktop Ask Theater
+- **Archive (`docs/archive/screenshots-v1/`)**:
+  - Legacy V1 screenshots archived.
 
-Niko review should verify:
-- homepage is truly only an entry point
-- Top Pick is clearly dominant after search
-- 10-second decision is possible
-- no fake data is introduced
-- visual hierarchy feels cinematic and young, not like an engineering dashboard
+Niko review verification:
+- [x] Homepage is truly only an entry point
+- [x] Top Pick is clearly dominant after search
+- [x] 10-second decision is possible
+- [x] No fake data is introduced
+- [x] Visual hierarchy feels cinematic and young, not like an engineering dashboard
+- [x] All 7 unit & integration tests passing (`npm test`)
+- [x] Production build passes (`npm run build`)
+- [x] Deployed live to GitHub Pages and Surge CDN
