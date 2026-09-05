@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import {
   X,
   Trophy,
-  Volume2,
-  Tv,
-  Users,
-  MapPin,
-  CheckCircle2,
+  Swords,
   ArrowRightLeft,
-  Tag,
-  Swords
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 
 interface HallCompareModalProps {
@@ -22,18 +18,18 @@ interface CompareHallData {
   id: string;
   theaterName: string;
   hallNo: string;
+  shortName: string;
   badge: string;
-  badgeColor: string;
   seatsNum: number;
   seatsText: string;
-  screenDesc: string;
+  format: string;
   soundDesc: string;
+  screenDesc: string;
   transitMinutes: number;
   transitDesc: string;
   priceNum: number;
   priceDesc: string;
-  features: string;
-  conclusion: string;
+  verdictTip: string;
 }
 
 const COMPARE_HALLS: Record<string, CompareHallData> = {
@@ -41,372 +37,316 @@ const COMPARE_HALLS: Record<string, CompareHallData> = {
     id: "tonlin-hall-1",
     theaterName: "桃園統領威秀影城",
     hallNo: "1 廳 (旗艦全景聲大廳)",
+    shortName: "統領 1 廳",
     badge: "桃園市區最大廳",
-    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     seatsNum: 288,
-    seatsText: "288 席 (全桃市區之冠)",
-    screenDesc: "14 米 4K Barco 雷射高對比銀幕",
+    seatsText: "288 席",
+    format: "Dolby Atmos",
     soundDesc: "Dolby Atmos 64 獨立天空聲道",
+    screenDesc: "14 米 4K Barco 雷射高對比銀幕",
     transitMinutes: 3,
-    transitDesc: "桃園火車站前站步行 3 分 (直通商場)",
+    transitDesc: "桃園車站步行 3 分鐘",
     priceNum: 300,
-    priceDesc: "$300 (小資首選)",
-    features: "排距 115cm 視野開闊無遮蔽，全景聲天空音場極度精準",
-    conclusion: "想下班即刻放鬆、少奔波且享受頂級全景聲音場 → 選桃園統領 1 廳！"
+    priceDesc: "NT$300",
+    verdictTip: "如果你在意整體爽度與就近方便，選統領 1 廳。"
   },
   "in89-hall-1": {
     id: "in89-hall-1",
     theaterName: "桃園站前 in89 豪華影城",
     hallNo: "1 廳 (LUXE 旗艦廳)",
-    badge: "體感與對比極致",
-    badgeColor: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
+    shortName: "in89 LUXE 廳",
+    badge: "LUXE 震動體感",
     seatsNum: 236,
-    seatsText: "236 席 (中大廳規格)",
-    screenDesc: "LUXE 終極高增益銀幕 (92% 反射率)",
-    soundDesc: "Dolby Atmos + 杜比全景聲低頻震動座椅",
+    seatsText: "236 席",
+    format: "LUXE + Atmos",
+    soundDesc: "Dolby Atmos 全景聲 + 震動體感座椅",
+    screenDesc: "LUXE 終極高增益銀幕",
     transitMinutes: 2,
-    transitDesc: "火車站前站正對面步行 2 分",
-    priceNum: 290,
-    priceDesc: "$290 (高性價比)",
-    features: "重低音帶動座椅物理震動，爆破戰鬥動作片爽度最高",
-    conclusion: "想要超強低頻震動體感、動作爆破近距離衝擊 → 選 in89 1 廳！"
+    transitDesc: "桃園車站正對面 2 分鐘",
+    priceNum: 320,
+    priceDesc: "NT$320",
+    verdictTip: "如果你想體驗低頻震動體感與高對比銀幕，選 in89。"
+  },
+  "tonlin-hall-5": {
+    id: "tonlin-hall-5",
+    theaterName: "桃園統領威秀影城",
+    hallNo: "5 廳",
+    shortName: "統領 5 廳",
+    badge: "小資省錢廳",
+    seatsNum: 110,
+    seatsText: "110 席",
+    format: "Standard 7.1",
+    soundDesc: "JBL 7.1 環繞聲",
+    screenDesc: "標準數位 2K 銀幕",
+    transitMinutes: 3,
+    transitDesc: "桃園車站步行 3 分鐘",
+    priceNum: 260,
+    priceDesc: "NT$260 (省$40)",
+    verdictTip: "如果你想省錢休閒看片，選 5 廳最划算。"
   },
   "linkou-imax": {
     id: "linkou-imax",
     theaterName: "林口 MITSUI OUTLET 威秀",
     hallNo: "IMAX 廳 (雙雷射巨幕)",
-    badge: "跨區旗艦極限巨幕",
-    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
+    shortName: "林口 IMAX",
+    badge: "跨區極限巨幕",
     seatsNum: 340,
-    seatsText: "340 席 (超巨大影廳)",
-    screenDesc: "4K 雙雷射 IMAX 弧形巨幕 (寬 22m x 高 13.6m)",
+    seatsText: "340 席 (最大)",
+    format: "IMAX 4K",
     soundDesc: "IMAX 12-Channel 新世代環繞音響",
-    transitMinutes: 15,
-    transitDesc: "機捷 A9 林口站 10 分 / 桃園開車 15 分",
+    screenDesc: "高 13.6 米 x 寬 22 米 雙雷射巨幕",
+    transitMinutes: 25,
+    transitDesc: "開車約 25 分鐘 (商場好停車)",
     priceNum: 390,
-    priceDesc: "$390 (旗艦頂規)",
-    features: "北台灣商用超巨幕，無可挑剔的視覺壓迫感與天地包覆",
-    conclusion: "想要大銀幕原生 IMAX 震撼感與極限沉浸視野 → 毫無懸念選林口 IMAX！"
+    priceDesc: "NT$390",
+    verdictTip: "如果你想要極限超大銀幕包覆感，強烈選林口 IMAX。"
   }
 };
 
 export const HallCompareModal: React.FC<HallCompareModalProps> = ({
   isOpen,
   onClose,
-  initialHallId
+  initialHallId = "linkou-imax"
 }) => {
-  if (!isOpen) return null;
-
-  // Selected Hall A and Hall B for 1-on-1 visual PK
   const [hallAId, setHallAId] = useState<string>("tonlin-hall-1");
-  const [hallBId, setHallBId] = useState<string>(
-    initialHallId && initialHallId !== "tonlin-hall-1" ? initialHallId : "linkou-imax"
-  );
+  const [hallBId, setHallBId] = useState<string>(initialHallId || "linkou-imax");
+  const [showFullSpecs, setShowFullSpecs] = useState(false);
+
+  if (!isOpen) return null;
 
   const hallA = COMPARE_HALLS[hallAId] || COMPARE_HALLS["tonlin-hall-1"];
   const hallB = COMPARE_HALLS[hallBId] || COMPARE_HALLS["linkou-imax"];
 
-  // Swap Hall A and B
   const handleSwap = () => {
     const temp = hallAId;
     setHallAId(hallBId);
     setHallBId(temp);
   };
 
-  // Winner calculation for each row (Review Section 3)
-  const isWinnerSeatsA = hallA.seatsNum > hallB.seatsNum;
-  const isWinnerSeatsB = hallB.seatsNum > hallA.seatsNum;
+  // Determine winners for each dimension
+  const winners = {
+    hallSize: hallA.seatsNum >= hallB.seatsNum ? "A" : "B",
+    sound: (hallA.format.includes("IMAX") || (hallA.format.includes("Atmos") && !hallB.format.includes("IMAX"))) ? "A" : "B",
+    transit: hallA.transitMinutes <= hallB.transitMinutes ? "A" : "B",
+    price: hallA.priceNum <= hallB.priceNum ? "A" : "B",
+    time: "A" // Preferred time
+  };
 
-  const isWinnerScreenA = hallA.screenDesc.includes("22m") || (!hallB.screenDesc.includes("22m") && hallA.screenDesc.includes("LUXE"));
-  const isWinnerScreenB = hallB.screenDesc.includes("22m") || (!hallA.screenDesc.includes("22m") && hallB.screenDesc.includes("LUXE"));
-
-  const isWinnerTransitA = hallA.transitMinutes < hallB.transitMinutes;
-  const isWinnerTransitB = hallB.transitMinutes < hallA.transitMinutes;
-
-  const isWinnerPriceA = hallA.priceNum < hallB.priceNum;
-  const isWinnerPriceB = hallB.priceNum < hallA.priceNum;
+  // Overall winner determination
+  const overallWinner = hallA.id === "linkou-imax" || hallB.id === "linkou-imax"
+    ? (hallA.id === "tonlin-hall-1" ? hallA : hallB)
+    : hallA;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-7">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
+      <div className="bg-cinema-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+          className="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 shadow-glow-accent">
-            <Swords className="w-6 h-6" />
+        {/* Modal Header (V2 Section 8: 兩場直接 PK) */}
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20">
+            <Swords className="w-3.5 h-3.5" />
+            <span>對決擂台</span>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-black text-white">
-                影廳規格 VS 對決 · 一眼看勝負
-              </h2>
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
-                PK 矩陣
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 mt-1">
-              左邊 vs 右邊！系統直接標記勝負項目，並給出明確選廳結論。
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            兩場直接 PK
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-400">
+            不用自己查規格，一眼看懂誰贏什麼
+          </p>
         </div>
 
-        {/* Pickers to Switch Competitors */}
-        <div className="p-3 rounded-2xl bg-cinema-950/80 border border-white/5 mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-slate-400 font-bold shrink-0">選擇擂台 A：</span>
-            <select
-              value={hallAId}
-              onChange={(e) => setHallAId(e.target.value)}
-              className="rounded-xl bg-cinema-900 border border-white/10 px-3 py-1.5 font-bold text-white focus:outline-none focus:border-amber-400 w-full sm:w-auto"
-            >
-              {Object.values(COMPARE_HALLS).map((h) => (
-                <option key={h.id} value={h.id}>
-                  {h.theaterName} · {h.hallNo}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Hall Selectors & Swap */}
+        <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 bg-cinema-950 p-2.5 rounded-2xl border border-white/[0.08]">
+          <select
+            value={hallAId}
+            onChange={(e) => setHallAId(e.target.value)}
+            className="w-full bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none cursor-pointer truncate"
+          >
+            {Object.values(COMPARE_HALLS).map((h) => (
+              <option key={h.id} value={h.id} className="bg-cinema-950 text-white">
+                {h.shortName} ({h.theaterName})
+              </option>
+            ))}
+          </select>
 
           <button
+            type="button"
             onClick={handleSwap}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-amber-400 hover:text-white transition-all flex items-center gap-1 shrink-0 font-bold"
-            title="交換雙方擂台位置"
+            className="p-2 rounded-xl bg-white/5 hover:bg-amber-500 hover:text-cinema-950 text-slate-400 transition-all"
+            title="對調比較選手"
           >
             <ArrowRightLeft className="w-4 h-4" />
-            <span className="text-xs">對調 VS</span>
           </button>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-slate-400 font-bold shrink-0">選擇擂台 B：</span>
-            <select
-              value={hallBId}
-              onChange={(e) => setHallBId(e.target.value)}
-              className="rounded-xl bg-cinema-900 border border-white/10 px-3 py-1.5 font-bold text-white focus:outline-none focus:border-amber-400 w-full sm:w-auto"
-            >
-              {Object.values(COMPARE_HALLS).map((h) => (
-                <option key={h.id} value={h.id}>
-                  {h.theaterName} · {h.hallNo}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Two Large Cards with Big VS Center Badge (Review Section 3) */}
-        <div className="relative mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {/* Left Card: Hall A */}
-            <div className="p-5 rounded-3xl bg-cinema-950/90 border border-white/10 hover:border-amber-500/40 transition-all space-y-4 shadow-xl relative overflow-hidden">
-              <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-lg border ${hallA.badgeColor}`}>
-                  {hallA.badge}
-                </span>
-                <span className="text-xs font-mono font-black text-amber-400">
-                  {hallA.priceDesc}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-black text-white">{hallA.theaterName}</h3>
-                <p className="text-sm font-bold text-amber-400 mt-0.5">{hallA.hallNo}</p>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-white/5 text-xs text-slate-300">
-                <span className="font-semibold text-white block mb-0.5">影廳特點：</span>
-                {hallA.features}
-              </div>
-            </div>
-
-            {/* Right Card: Hall B */}
-            <div className="p-5 rounded-3xl bg-cinema-950/90 border border-white/10 hover:border-cyan-500/40 transition-all space-y-4 shadow-xl relative overflow-hidden">
-              <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-lg border ${hallB.badgeColor}`}>
-                  {hallB.badge}
-                </span>
-                <span className="text-xs font-mono font-black text-cyan-400">
-                  {hallB.priceDesc}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-black text-white">{hallB.theaterName}</h3>
-                <p className="text-sm font-bold text-cyan-400 mt-0.5">{hallB.hallNo}</p>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-white/5 text-xs text-slate-300">
-                <span className="font-semibold text-white block mb-0.5">影廳特點：</span>
-                {hallB.features}
-              </div>
-            </div>
-          </div>
-
-          {/* Big Center Floating VS Badge */}
-          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 border-4 border-cinema-900 shadow-glow-accent text-black font-black text-sm tracking-wider pointer-events-none">
-            VS
-          </div>
-        </div>
-
-        {/* Row-by-Row Winner Matrix (Review Section 3 Table) */}
-        <div className="rounded-2xl overflow-hidden border border-white/10 mb-6 text-xs divide-y divide-white/5 bg-cinema-950/60">
-          {/* Row 1: Seats */}
-          <div className="grid grid-cols-12 p-3 sm:p-3.5 items-center">
-            <div className="col-span-4 sm:col-span-3 font-bold text-slate-400 flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-amber-400" />
-              <span>座位席次</span>
-            </div>
-            <div className="col-span-4 sm:col-span-4 text-left sm:text-center font-bold">
-              {isWinnerSeatsA ? (
-                <span className="inline-flex items-center gap-1 text-amber-300 font-extrabold bg-amber-500/15 px-2 py-0.5 rounded-md border border-amber-500/30">
-                  🏆 {hallA.seatsText}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallA.seatsText}</span>
-              )}
-            </div>
-            <div className="col-span-4 sm:col-span-5 text-right font-bold">
-              {isWinnerSeatsB ? (
-                <span className="inline-flex items-center gap-1 text-cyan-300 font-extrabold bg-cyan-500/15 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                  🏆 {hallB.seatsText}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallB.seatsText}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Row 2: Screen */}
-          <div className="grid grid-cols-12 p-3 sm:p-3.5 items-center">
-            <div className="col-span-4 sm:col-span-3 font-bold text-slate-400 flex items-center gap-1.5">
-              <Tv className="w-4 h-4 text-cyan-400" />
-              <span>銀幕規格</span>
-            </div>
-            <div className="col-span-4 sm:col-span-4 text-left sm:text-center">
-              {isWinnerScreenA ? (
-                <span className="inline-flex items-center gap-1 text-amber-300 font-extrabold bg-amber-500/15 px-2 py-0.5 rounded-md border border-amber-500/30">
-                  🏆 {hallA.screenDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallA.screenDesc}</span>
-              )}
-            </div>
-            <div className="col-span-4 sm:col-span-5 text-right">
-              {isWinnerScreenB ? (
-                <span className="inline-flex items-center gap-1 text-cyan-300 font-extrabold bg-cyan-500/15 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                  🏆 {hallB.screenDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallB.screenDesc}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Row 3: Sound */}
-          <div className="grid grid-cols-12 p-3 sm:p-3.5 items-center">
-            <div className="col-span-4 sm:col-span-3 font-bold text-slate-400 flex items-center gap-1.5">
-              <Volume2 className="w-4 h-4 text-indigo-400" />
-              <span>音響系統</span>
-            </div>
-            <div className="col-span-4 sm:col-span-4 text-left sm:text-center text-slate-300 font-medium">
-              <span className="text-amber-200">{hallA.soundDesc}</span>
-            </div>
-            <div className="col-span-4 sm:col-span-5 text-right text-slate-300 font-medium">
-              <span className="text-cyan-200">{hallB.soundDesc}</span>
-            </div>
-          </div>
-
-          {/* Row 4: Transit / Travel Time */}
-          <div className="grid grid-cols-12 p-3 sm:p-3.5 items-center">
-            <div className="col-span-4 sm:col-span-3 font-bold text-slate-400 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-rose-400" />
-              <span>車程交通</span>
-            </div>
-            <div className="col-span-4 sm:col-span-4 text-left sm:text-center font-bold">
-              {isWinnerTransitA ? (
-                <span className="inline-flex items-center gap-1 text-emerald-300 font-extrabold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                  🏆 {hallA.transitDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallA.transitDesc}</span>
-              )}
-            </div>
-            <div className="col-span-4 sm:col-span-5 text-right font-bold">
-              {isWinnerTransitB ? (
-                <span className="inline-flex items-center gap-1 text-emerald-300 font-extrabold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                  🏆 {hallB.transitDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallB.transitDesc}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Row 5: Price */}
-          <div className="grid grid-cols-12 p-3 sm:p-3.5 items-center">
-            <div className="col-span-4 sm:col-span-3 font-bold text-slate-400 flex items-center gap-1.5">
-              <Tag className="w-4 h-4 text-emerald-400" />
-              <span>實惠票價</span>
-            </div>
-            <div className="col-span-4 sm:col-span-4 text-left sm:text-center font-bold">
-              {isWinnerPriceA ? (
-                <span className="inline-flex items-center gap-1 text-emerald-300 font-extrabold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                  🏆 {hallA.priceDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallA.priceDesc}</span>
-              )}
-            </div>
-            <div className="col-span-4 sm:col-span-5 text-right font-bold">
-              {isWinnerPriceB ? (
-                <span className="inline-flex items-center gap-1 text-emerald-300 font-extrabold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                  🏆 {hallB.priceDesc}
-                </span>
-              ) : (
-                <span className="text-slate-300">{hallB.priceDesc}</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Direct Takeaway Conclusion (Review Section 3: 底部直接給一句結論) */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-indigo-500/15 border border-amber-500/30 mb-6 space-y-2">
-          <span className="text-xs font-black text-amber-300 flex items-center gap-1.5 uppercase tracking-wider">
-            <Trophy className="w-4 h-4 text-amber-400" />
-            系統直接給結論（不用自己猜）：
-          </span>
-          <div className="space-y-1.5 text-xs sm:text-sm text-slate-100 font-medium">
-            <p>
-              👉 <strong>如果你今天想要大銀幕震撼感、沉浸視野</strong> → 毫無懸念選{" "}
-              <strong className="text-cyan-300">{hallB.id === "linkou-imax" ? hallB.theaterName : hallA.theaterName}</strong>！
-            </p>
-            <p>
-              👉 <strong>如果你想下班即刻觀影、少奔波且音效絕頂</strong> → 首選{" "}
-              <strong className="text-amber-300">{hallA.id.includes("tonlin") ? hallA.theaterName : hallB.theaterName}</strong>！
-            </p>
-          </div>
-        </div>
-
-        {/* Modal Footer */}
-        <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>所有影廳硬體數據皆依影城官方認證參數評比</span>
-          </div>
-          <button
-            onClick={onClose}
-            className="px-6 py-2.5 rounded-xl bg-amber-500 text-black font-extrabold text-xs shadow-glow-accent hover:bg-amber-400 transition-all shrink-0 ml-4"
+          <select
+            value={hallBId}
+            onChange={(e) => setHallBId(e.target.value)}
+            className="w-full bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none cursor-pointer truncate text-right"
           >
-            完成 PK 檢視
+            {Object.values(COMPARE_HALLS).map((h) => (
+              <option key={h.id} value={h.id} className="bg-cinema-950 text-white">
+                {h.shortName} ({h.theaterName})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Top Conclusion Banner (V2: First thing shown) */}
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 space-y-1.5">
+          <div className="flex items-center gap-2 text-sm sm:text-base font-black text-amber-300">
+            <Trophy className="w-5 h-5 text-amber-400 fill-amber-400 shrink-0" />
+            <span>🏆 綜合推薦：{overallWinner.shortName}</span>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+            如果你在意整體爽度與距離，選 {hallA.shortName}；如果想要極致巨幕體驗，選 {hallB.shortName}。
+          </p>
+        </div>
+
+        {/* 一眼看勝負表 (V2 Section 8 Winner Table) */}
+        <div className="bg-cinema-950/90 rounded-2xl border border-white/[0.08] overflow-hidden">
+          <div className="grid grid-cols-3 py-2 px-3.5 bg-white/[0.03] border-b border-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span>比較項目</span>
+            <span className="text-center">{hallA.shortName}</span>
+            <span className="text-center">{hallB.shortName}</span>
+          </div>
+
+          <div className="divide-y divide-white/5 text-xs sm:text-sm">
+            {/* 1. 🏟️ 大廳規模 */}
+            <div className="grid grid-cols-3 items-center py-2.5 px-3.5">
+              <span className="font-semibold text-slate-300 flex items-center gap-1">
+                <span>🏟️</span> 影廳規模
+              </span>
+              <div className="text-center font-bold">
+                {winners.hallSize === "A" ? (
+                  <span className="text-amber-400">🏆 {hallA.seatsText} (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallA.seatsText}</span>
+                )}
+              </div>
+              <div className="text-center font-bold">
+                {winners.hallSize === "B" ? (
+                  <span className="text-amber-400">🏆 {hallB.seatsText} (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallB.seatsText}</span>
+                )}
+              </div>
+            </div>
+
+            {/* 2. 🔊 音效畫質 */}
+            <div className="grid grid-cols-3 items-center py-2.5 px-3.5">
+              <span className="font-semibold text-slate-300 flex items-center gap-1">
+                <span>🔊</span> 音效規格
+              </span>
+              <div className="text-center font-bold">
+                {winners.sound === "A" ? (
+                  <span className="text-amber-400">🏆 {hallA.format} (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallA.format}</span>
+                )}
+              </div>
+              <div className="text-center font-bold">
+                {winners.sound === "B" ? (
+                  <span className="text-amber-400">🏆 {hallB.format} (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallB.format}</span>
+                )}
+              </div>
+            </div>
+
+            {/* 3. 🚗 交通距離 */}
+            <div className="grid grid-cols-3 items-center py-2.5 px-3.5">
+              <span className="font-semibold text-slate-300 flex items-center gap-1">
+                <span>🚗</span> 交通距離
+              </span>
+              <div className="text-center font-bold">
+                {winners.transit === "A" ? (
+                  <span className="text-amber-400">🏆 {hallA.transitMinutes} 分鐘 (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallA.transitMinutes} 分鐘</span>
+                )}
+              </div>
+              <div className="text-center font-bold">
+                {winners.transit === "B" ? (
+                  <span className="text-amber-400">🏆 {hallB.transitMinutes} 分鐘 (勝)</span>
+                ) : (
+                  <span className="text-slate-400">{hallB.transitMinutes} 分鐘</span>
+                )}
+              </div>
+            </div>
+
+            {/* 4. 💰 票價划算 */}
+            <div className="grid grid-cols-3 items-center py-2.5 px-3.5">
+              <span className="font-semibold text-slate-300 flex items-center gap-1">
+                <span>💰</span> 參考票價
+              </span>
+              <div className="text-center font-bold">
+                {winners.price === "A" ? (
+                  <span className="text-emerald-400">🏆 {hallA.priceDesc} (更省)</span>
+                ) : (
+                  <span className="text-slate-400">{hallA.priceDesc}</span>
+                )}
+              </div>
+              <div className="text-center font-bold">
+                {winners.price === "B" ? (
+                  <span className="text-emerald-400">🏆 {hallB.priceDesc} (更省)</span>
+                ) : (
+                  <span className="text-slate-400">{hallB.priceDesc}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Second-level Progressive Disclosure: 看完整規格 */}
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={() => setShowFullSpecs(!showFullSpecs)}
+            className="w-full py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1 transition-all"
+          >
+            <span>{showFullSpecs ? "收合硬體詳細規格" : "看完整硬體詳細規格"}</span>
+            {showFullSpecs ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+
+          {showFullSpecs && (
+            <div className="mt-3 p-4 rounded-xl bg-cinema-950 border border-white/10 space-y-3 text-xs animate-fadeIn">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="font-bold text-amber-400">{hallA.shortName}</div>
+                  <div className="text-slate-300">螢幕：{hallA.screenDesc}</div>
+                  <div className="text-slate-300">音效：{hallA.soundDesc}</div>
+                  <div className="text-slate-400">交通：{hallA.transitDesc}</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="font-bold text-amber-400">{hallB.shortName}</div>
+                  <div className="text-slate-300">螢幕：{hallB.screenDesc}</div>
+                  <div className="text-slate-300">音效：{hallB.soundDesc}</div>
+                  <div className="text-slate-400">交通：{hallB.transitDesc}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Modal Bottom CTA */}
+        <div className="pt-2 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-cinema-950 font-black text-sm transition-all shadow-md text-center"
+          >
+            決定好了，返回場次清單
           </button>
         </div>
       </div>
     </div>
   );
 };
-

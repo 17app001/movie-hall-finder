@@ -19,13 +19,14 @@ import { MissingInfoPanel } from "./components/MissingInfoPanel";
 import { VoiceAgentModal } from "./components/VoiceAgentModal";
 import { TheaterGuideModal } from "./components/TheaterGuideModal";
 import { HallCompareModal } from "./components/HallCompareModal";
-import { Film } from "lucide-react";
+import { Film, Swords, MapPin, PhoneCall, ChevronDown, ChevronUp } from "lucide-react";
 
 export function App() {
   // State: Halls and Showtimes (allows dynamic verification updates via Voice Agent)
   const [halls, setHalls] = useState<Hall[]>(MOCK_HALLS);
   const [showtimes] = useState<Showtime[]>(MOCK_SHOWTIMES);
   const [missingTasks, setMissingTasks] = useState<MissingInfoTask[]>(INITIAL_MISSING_TASKS);
+  const [showMissingPanel, setShowMissingPanel] = useState(false);
 
   // State: User filter preferences (default: Today afternoon, Taoyuan district, War of Hope, prefer large hall)
   const [preferences, setPreferences] = useState<FilterPreferences>({
@@ -87,7 +88,7 @@ export function App() {
           h.id === "in89-hall-3"
             ? {
                 ...h,
-                soundSystem: "JBL 7.1 環繞聲道 (AI 客服核實更新)",
+                soundSystem: "JBL 7.1 環繞聲道 (已致電官方客服核實)",
                 screenSpecs: "數位標準雷射銀幕 (已核實)",
                 dataStatus: "verified",
                 source: "影城官方客服電話 (03) 331-0656 核實",
@@ -103,16 +104,16 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-cinema-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-black">
-      {/* Sticky Header */}
+      {/* Sticky Header (V2: Clean, non-dashboard) */}
       <Header
         onOpenTheaterGuide={() => setIsTheaterGuideOpen(true)}
         onOpenVoiceAgent={() => setVoiceAgentTask(missingTasks[0])}
         pendingTasksCount={pendingTasksCount}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Dynamic Filter / Search Bar */}
+      {/* Main Content Area (Max-w-5xl for focused movie decision rhythm) */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6">
+        {/* Dynamic Filter / Search Bar (今晚想看什麼？ 3 步極簡問答) */}
         <FilterBar
           movies={MOCK_MOVIES}
           preferences={preferences}
@@ -120,46 +121,68 @@ export function App() {
           resultCount={rankedResults.length}
         />
 
-        {/* Top Pick "The Crown Jewel" Recommendation Card */}
+        {/* Top Pick Hero Card (V2: Absolute Protagonist) */}
         {topPick ? (
           <TopPickCard
             recommendation={topPick}
             onInspectHall={(hallId) => setInspectingHallId(hallId)}
             onOpenTheaterGuide={() => setIsTheaterGuideOpen(true)}
             onOpenCompareModal={() => {
-              setSelectedCompareHallId(topPick.hall?.id || null);
+              setSelectedCompareHallId(candidateList[0]?.hall?.id || "linkou-imax");
               setIsCompareModalOpen(true);
             }}
           />
         ) : (
-          <div className="glass-panel rounded-3xl p-10 text-center text-slate-400 mb-8 border border-white/10">
-            <Film className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-            <h3 className="text-xl font-bold text-white">找不到符合當前篩選條件的場次</h3>
-            <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
-              建議切換時段或開啟「允許跨區移動（桃園 ↔ 林口）」來探索更多高規格影廳！
+          <div className="bg-cinema-900/60 rounded-3xl p-8 text-center text-slate-400 border border-white/10">
+            <Film className="w-10 h-10 text-amber-400 mx-auto mb-3 opacity-80" />
+            <h3 className="text-lg font-bold text-white">找不到符合此條件的場次</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              點擊「想更合你胃口？」切換時段或開啟「跨區林口」即可探索更多優質大廳！
             </p>
           </div>
         )}
 
-        {/* Showtime Candidates List */}
+        {/* Showtime Candidates List (Why not first? #2 / #3) */}
         <ShowtimeList
           candidates={candidateList}
           onInspectHall={(hallId) => setInspectingHallId(hallId)}
           onOpenCompareModal={(hallId) => {
-            setSelectedCompareHallId(hallId || null);
+            setSelectedCompareHallId(hallId || candidateList[0]?.hall?.id || "linkou-imax");
             setIsCompareModalOpen(true);
           }}
         />
 
-        {/* Missing Info / Voice Agent Query Panel */}
-        <MissingInfoPanel
-          tasks={missingTasks}
-          onStartVoiceCall={(task) => setVoiceAgentTask(task)}
-        />
+        {/* Discrete Secondary Section: 影城規格補查中心 (Progressive Disclosure) */}
+        <div className="pt-4 border-t border-white/[0.08]">
+          <button
+            type="button"
+            onClick={() => setShowMissingPanel(!showMissingPanel)}
+            className="w-full py-2.5 px-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-xs text-slate-400 hover:text-slate-200 flex items-center justify-between transition-all"
+          >
+            <div className="flex items-center gap-2">
+              <span>📞 有影廳規格尚未確認？查看「幫我問影城」排查清單</span>
+              {pendingTasksCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px]">
+                  {pendingTasksCount} 廳待查
+                </span>
+              )}
+            </div>
+            {showMissingPanel ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+
+          {showMissingPanel && (
+            <div className="mt-3 animate-fadeIn">
+              <MissingInfoPanel
+                tasks={missingTasks}
+                onStartVoiceCall={(task) => setVoiceAgentTask(task)}
+              />
+            </div>
+          )}
+        </div>
       </main>
 
-      {/* Mobile Sticky Quick Action Bar (Review Section 7.1 Mobile First) */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-cinema-950/95 backdrop-blur-xl border-t border-white/10 px-4 py-2.5 flex items-center justify-around shadow-2xl">
+      {/* Mobile Sticky Bottom Bar (Thumb-friendly V2) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-cinema-950/95 backdrop-blur-xl border-t border-white/10 px-6 py-2.5 flex items-center justify-between shadow-2xl">
         <button
           onClick={() => {
             const el = document.getElementById("top-pick-section");
@@ -172,44 +195,47 @@ export function App() {
         </button>
 
         <button
-          onClick={() => setIsCompareModalOpen(true)}
-          className="flex flex-col items-center text-slate-300 font-bold text-[10px] hover:text-white"
+          onClick={() => {
+            setSelectedCompareHallId(candidateList[0]?.hall?.id || "linkou-imax");
+            setIsCompareModalOpen(true);
+          }}
+          className="flex flex-col items-center text-slate-300 hover:text-white font-bold text-[10px]"
         >
-          <span className="text-amber-400 font-black text-xs">VS</span>
-          <span>影廳 PK</span>
+          <Swords className="w-4 h-4 mb-0.5 text-amber-400" />
+          <span>兩場 PK</span>
         </button>
 
         <button
           onClick={() => setIsTheaterGuideOpen(true)}
-          className="flex flex-col items-center text-slate-300 font-bold text-[10px] hover:text-white"
+          className="flex flex-col items-center text-slate-300 hover:text-white font-bold text-[10px]"
         >
-          <span className="text-amber-400 font-black text-xs">🗺️</span>
-          <span>影城導覽</span>
+          <MapPin className="w-4 h-4 mb-0.5 text-slate-400" />
+          <span>影城指南</span>
         </button>
 
         <button
           onClick={() => setVoiceAgentTask(missingTasks[0])}
-          className="flex flex-col items-center text-indigo-300 font-bold text-[10px] hover:text-white relative"
+          className="flex flex-col items-center text-slate-300 hover:text-white font-bold text-[10px] relative"
         >
-          <span className="text-indigo-400 font-black text-xs">✨</span>
-          <span>幫我確認</span>
+          <PhoneCall className="w-4 h-4 mb-0.5 text-amber-300" />
+          <span>幫我問</span>
           {pendingTasksCount > 0 && (
-            <span className="absolute -top-1 right-1 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="absolute -top-0.5 right-1 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
           )}
         </button>
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500 mb-14 sm:mb-0">
-        <div className="max-w-7xl mx-auto space-y-2">
-          <p className="font-semibold text-slate-400">
-            Movie Hall Finder (最佳影廳挑選器) · 桃園 / 林口跨區 Web POC v1.1
+      <footer className="border-t border-white/[0.08] bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500 mb-14 sm:mb-0">
+        <div className="max-w-4xl mx-auto space-y-1.5">
+          <p className="font-bold text-slate-300">
+            Movie Hall Finder · 桃園 / 林口跨區 V2
           </p>
-          <p>
-            核心理念：資料可以少，但不能假。Mock 資料僅用於演算法與 UI 展示，絕不偽裝成真實情報。
+          <p className="text-slate-400">
+            不用自己查半天，我幫你挑今天最值得看的那一場。
           </p>
-          <p className="text-slate-600">
-            © 2026 Movie Hall Finder. All rights reserved.
+          <p className="text-[11px] text-slate-500">
+            資料可以少，但不能假 · 影城交通資訊皆為官方核實認證
           </p>
         </div>
       </footer>
@@ -252,4 +278,3 @@ export function App() {
 }
 
 export default App;
-

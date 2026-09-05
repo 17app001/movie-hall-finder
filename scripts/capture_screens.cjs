@@ -5,50 +5,51 @@ const fs = require('fs');
 const path = require('path');
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const cloudDir = 'G:\\我的雲端硬碟\\給Jerry\\2026-09-05';
+const cloudBaseDir = 'G:\\我的雲端硬碟\\給Jerry\\2026-09-05';
 const artifactDir = 'C:\\Users\\User\\.gemini\\antigravity-cli\\brain\\7e234b0c-3051-4e74-bff1-4754dd131850';
 const workspaceDir = 'D:\\MyProject\\bigmovie-finder';
 
-// 1. Download QR Code for easy mobile scanning
-function downloadQRCode() {
+const targetUrl = 'https://17app001.github.io/movie-hall-finder/';
+
+// 1. Generate & Save QR Codes
+function downloadQRCodes() {
   return new Promise((resolve) => {
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data=https://movie-hall-finder-taoyuan.surge.sh';
-    const localQrPath = path.join(workspaceDir, 'qrcode_mobile.png');
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data=${encodeURIComponent(targetUrl)}`;
+    const localQrPath = path.join(workspaceDir, 'qrcode_github_pages.png');
     const file = fs.createWriteStream(localQrPath);
+
     https.get(qrUrl, (res) => {
       res.pipe(file);
       file.on('finish', () => {
         file.close();
         console.log('QR Code generated at:', localQrPath);
-        if (fs.existsSync(cloudDir)) {
-          fs.copyFileSync(localQrPath, path.join(cloudDir, 'qrcode_mobile.png'));
-          console.log('Synced QR Code to Cloud Directory!');
-        }
-        fs.copyFileSync(localQrPath, path.join(artifactDir, 'qrcode_mobile.png'));
+        fs.copyFileSync(localQrPath, path.join(artifactDir, 'qrcode_github_pages.png'));
         resolve(true);
       });
     }).on('error', (err) => {
-      console.warn('QR Code download failed, skipping QR code:', err.message);
+      console.warn('QR Code error:', err.message);
       resolve(false);
     });
   });
 }
 
-// 2. Views to capture
+// 2. Exact Views matching Niko Review Gate (Revision V2 Section 18)
 const views = [
-  // Desktop Views
-  { name: '01_main_dashboard.png', url: 'http://localhost:4173', size: '1440,1600' },
-  { name: '02_hall_compare_pk.png', url: 'http://localhost:4173?view=compare', size: '1440,1200' },
-  { name: '03_hall_spec_modal.png', url: 'http://localhost:4173?view=spec', size: '1440,1200' },
-  { name: '04_ai_voice_agent_modal.png', url: 'http://localhost:4173?view=voice', size: '1440,1200' },
-  { name: '05_theater_guide_modal.png', url: 'http://localhost:4173?view=guide', size: '1440,1200' },
+  // Mobile Views (390x950 iPhone Viewport)
+  { name: 'mobile_01_homepage.png', category: 'mobile', chinese: '01_首頁生活化搜尋.png', url: 'http://localhost:4173', size: '390,750' },
+  { name: 'mobile_02_top_pick.png', category: 'mobile', chinese: '02_TopPick電影英雄卡.png', url: 'http://localhost:4173', size: '390,1050' },
+  { name: 'mobile_03_preference_drawer.png', category: 'mobile', chinese: '03_想更合你胃口_偏好抽屜.png', url: 'http://localhost:4173?view=drawer', size: '390,950' },
+  { name: 'mobile_04_hall_pk.png', category: 'mobile', chinese: '04_兩場直接PK_勝負對決.png', url: 'http://localhost:4173?view=compare', size: '390,950' },
+  { name: 'mobile_05_hall_detail.png', category: 'mobile', chinese: '05_影廳詳情與帝王位.png', url: 'http://localhost:4173?view=spec', size: '390,950' },
+  { name: 'mobile_06_theater_guide.png', category: 'mobile', chinese: '06_去這間影城_出遊指南.png', url: 'http://localhost:4173?view=guide', size: '390,950' },
+  { name: 'mobile_07_ask_theater.png', category: 'mobile', chinese: '07_幫我問影城_電話確認.png', url: 'http://localhost:4173?view=voice', size: '390,950' },
 
-  // Mobile Views (iPhone 14 / modern smartphone viewport)
-  { name: 'mobile_01_main_hero.png', url: 'http://localhost:4173', size: '390,950' },
-  { name: 'mobile_02_preference_drawer.png', url: 'http://localhost:4173?view=drawer', size: '390,950' },
-  { name: 'mobile_03_hall_compare_pk.png', url: 'http://localhost:4173?view=compare', size: '390,950' },
-  { name: 'mobile_04_hall_spec_modal.png', url: 'http://localhost:4173?view=spec', size: '390,950' },
-  { name: 'mobile_05_theater_guide.png', url: 'http://localhost:4173?view=guide', size: '390,950' }
+  // Desktop Views (1440x1200)
+  { name: 'desktop_01_main.png', category: 'desktop', chinese: '01_電腦版全景_首頁與英雄卡.png', url: 'http://localhost:4173', size: '1440,1500' },
+  { name: 'desktop_02_hall_pk.png', category: 'desktop', chinese: '02_電腦版_兩場直接PK.png', url: 'http://localhost:4173?view=compare', size: '1440,1100' },
+  { name: 'desktop_03_hall_spec.png', category: 'desktop', chinese: '03_電腦版_影廳詳情.png', url: 'http://localhost:4173?view=spec', size: '1440,1100' },
+  { name: 'desktop_04_theater_guide.png', category: 'desktop', chinese: '04_電腦版_去這間影城指南.png', url: 'http://localhost:4173?view=guide', size: '1440,1100' },
+  { name: 'desktop_05_ask_theater.png', category: 'desktop', chinese: '05_電腦版_幫我問影城.png', url: 'http://localhost:4173?view=voice', size: '1440,1100' }
 ];
 
 console.log('Starting preview server on port 4173...');
@@ -73,7 +74,18 @@ function checkReady(attempts = 0) {
 }
 
 async function captureAll() {
-  await downloadQRCode();
+  await downloadQRCodes();
+
+  const destDirs = [
+    path.join(cloudBaseDir, 'screenshots'),
+    path.join(cloudBaseDir, '最新截圖')
+  ];
+
+  for (const base of destDirs) {
+    fs.mkdirSync(path.join(base, '01_手機版_Mobile'), { recursive: true });
+    fs.mkdirSync(path.join(base, '02_電腦版_Desktop'), { recursive: true });
+    fs.mkdirSync(path.join(base, '03_手機掃碼測試_QRCode'), { recursive: true });
+  }
 
   for (const v of views) {
     const localPath = path.join(workspaceDir, v.name);
@@ -83,22 +95,35 @@ async function captureAll() {
       execSync(cmd);
       console.log('  -> Saved to local workspace:', v.name);
 
-      // Copy to Cloud Drive
-      if (fs.existsSync(cloudDir)) {
-        const destCloud = path.join(cloudDir, v.name);
-        fs.copyFileSync(localPath, destCloud);
-        console.log('  -> Synced to Cloud Drive:', destCloud);
-      }
-
       // Copy to Artifact Directory
-      const destArtifact = path.join(artifactDir, v.name);
-      fs.copyFileSync(localPath, destArtifact);
+      fs.copyFileSync(localPath, path.join(artifactDir, v.name));
+
+      // Copy to Cloud Drive folders
+      const subFolder = v.category === 'mobile' ? '01_手機版_Mobile' : '02_電腦版_Desktop';
+      for (const base of destDirs) {
+        // Flat copy
+        fs.copyFileSync(localPath, path.join(base, v.name));
+        // Categorized copy with English name
+        fs.copyFileSync(localPath, path.join(base, subFolder, v.name));
+        // Categorized copy with friendly Chinese name
+        fs.copyFileSync(localPath, path.join(base, subFolder, v.chinese));
+      }
     } catch (e) {
       console.error('Failed to capture', v.name, e.message);
     }
   }
 
-  console.log('\nAll captures & syncs completed successfully!');
+  // Copy QR Codes
+  const qrLocal = path.join(workspaceDir, 'qrcode_github_pages.png');
+  if (fs.existsSync(qrLocal)) {
+    for (const base of destDirs) {
+      fs.copyFileSync(qrLocal, path.join(base, 'qrcode_mobile.png'));
+      fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', '01_GitHub_Pages全球CDN通道_QR.png'));
+      fs.copyFileSync(qrLocal, path.join(base, '03_手機掃碼測試_QRCode', 'qrcode_mobile.png'));
+    }
+  }
+
+  console.log('\nAll V2 Niko Review Gate captures completed successfully!');
   preview.kill();
   process.exit(0);
 }

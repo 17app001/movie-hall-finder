@@ -31,6 +31,9 @@ export interface Hall {
   screenSpecs?: string;
   wheelchairSeats?: number;
   laserProjection?: boolean;
+  humanHeadline?: string;      // 例如：「桃園站前的大型主力廳」
+  humanSuitability?: string;   // 例如：「適合動作片、科幻片與大片」
+  emperorSeatAdvice?: string;  // 例如：「中間偏後 2～3 排（推薦 G/H 排中段）」
   dataStatus: DataStatus;
   source?: string;
   verifiedAt?: string;
@@ -108,6 +111,7 @@ export interface RecommendationResult {
   breakdown: ScoreBreakdown;
   additivePoints: AdditivePoint[];
   humanSummary: string;
+  whyNotFirst?: string; // 例如：「少跑 15 分鐘，但影廳較小」、「便宜 NT$80，但沒有 Atmos」
   isTopPick?: boolean;
 }
 

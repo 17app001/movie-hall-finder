@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Hall, Theater } from "../types";
 import {
   X,
@@ -8,9 +8,10 @@ import {
   ShieldCheck,
   AlertTriangle,
   Phone,
-  Sparkles,
+  PhoneCall,
   Crown,
-  HelpCircle
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 
 interface HallSpecModalProps {
@@ -28,31 +29,18 @@ export const HallSpecModal: React.FC<HallSpecModalProps> = ({
   onClose,
   onLaunchVoiceAgent
 }) => {
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
+
   if (!isOpen || !hall || !theater) return null;
 
   const isVerified = hall.dataStatus === "verified";
-  const hasMissingSeats = !hall.seatCount;
-
-  // 人話版影廳點評 (Review Section 4)
-  let plainHumanVerdict = "";
-  let goldenSeatAdvice = "F ~ H 排中央座位為最佳視角";
-
-  if (hall.id === "tonlin-hall-1") {
-    plainHumanVerdict = "這是一個桃園站前旗艦超大廳，配備 64 獨立天空聲道杜比全景聲，音場包覆感極佳，特別適合科幻與大場面電影。";
-    goldenSeatAdvice = "推薦 G 排 10~14 號（水平視角與天空音響交會中心）";
-  } else if (hall.id === "in89-hall-1") {
-    plainHumanVerdict = "這是一個中大型體感旗艦廳，具備 LUXE 終極高反射銀幕與重低音震動座椅，爆炸重擊會直接撼動座椅，動作片爽度極高。";
-    goldenSeatAdvice = "推薦 F 排 8~12 號（震動座椅感應最佳甜蜜點）";
-  } else if (hall.id === "linkou-imax") {
-    plainHumanVerdict = "這是一個頂級超巨幕大廳，寬達 22 米的 4K 雙雷射 IMAX 弧形銀幕，視野壓迫感無可匹敵，專為好萊塢原生巨幕大作而生。";
-    goldenSeatAdvice = "推薦 H ~ J 排中段（視角包覆且不仰角疲勞）";
-  } else {
-    plainHumanVerdict = `這是一個${hall.hallSizeLevel || "中型"}規格廳，空間適中無壓迫感，適合各類型熱門電影觀賞。`;
-  }
+  const headline = hall.humanHeadline || `${theater.name} · ${hall.hallNo}`;
+  const suitability = hall.humanSuitability || "適合各類熱門強檔大片";
+  const goldenSeatAdvice = hall.emperorSeatAdvice || "推薦：中間偏後 2～3 排（視野水平無遮蔽）";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-6 sm:p-7 overflow-hidden">
+      <div className="relative w-full max-w-lg rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-6 sm:p-7 space-y-4 overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -61,158 +49,130 @@ export const HallSpecModal: React.FC<HallSpecModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 shadow-glow-accent">
-            <Tv className="w-6 h-6" />
+        {/* 1. Header: Plain Language Title & Suitability (V2 Section 9) */}
+        <div className="space-y-1 pr-8">
+          <div className="text-xs text-amber-400 font-semibold flex items-center gap-1.5">
+            <span>{theater.name}</span>
+            <span>·</span>
+            <span>{hall.hallNo}</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
-              <span>{theater.name}</span>
-              <span>·</span>
-              <span>{theater.district}</span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-              <span>{hall.hallNo}</span>
-              <span className="text-xs px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-extrabold">
-                {hall.format}
-              </span>
-            </h2>
-          </div>
-        </div>
-
-        {/* 1. Top Plain Language Human Verdict Banner (Review Section 4) */}
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-cinema-950 border border-amber-500/30 mb-4 space-y-1">
-          <div className="flex items-center gap-1.5 text-xs font-black text-amber-300 uppercase tracking-wide">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>人話版影廳點評：</span>
-          </div>
-          <p className="text-sm text-white font-bold leading-snug">
-            「{plainHumanVerdict}」
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            {headline}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-300 font-medium pt-0.5">
+            {suitability}
           </p>
         </div>
 
-        {/* 2. Verification Status Banner (Review Section 4: 保留已驗證/待確認/資料不足) */}
-        <div
-          className={`p-3 rounded-xl mb-4 border text-xs flex items-start gap-2.5 ${
-            isVerified
-              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-              : "bg-amber-500/15 border-amber-500/40 text-amber-300"
-          }`}
-        >
-          {isVerified ? (
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+        {/* 2. Overview Tags: Size & Special Format */}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {hall.seatCount ? (
+            <div className="px-3 py-1.5 rounded-xl bg-cinema-950 border border-white/10 text-xs font-bold text-white flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-amber-400" />
+              <span>{hall.seatCount} 席 ({hall.hallSizeLevel || "大廳"})</span>
+            </div>
           ) : (
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-300">
+              ⚠️ 目前沒有可靠座位數資料
+            </div>
           )}
-          <div className="space-y-0.5">
-            <span className="font-bold block">
-              {isVerified ? "✅ 影廳規格：官方認證已核實" : "⚠️ 此影廳部分硬體規格待確認"}
-            </span>
-            <p className="text-[11px] text-slate-300">
-              {isVerified
-                ? `資料來源：${hall.source || theater.source}（核實日：${hall.verifiedAt || theater.verifiedAt}）`
-                : "遵循「資料可以少，但不能假」原則。未確認欄位絕不偽造，可點擊下方按鈕由系統代為向影城確認。"}
-            </p>
+
+          <div className="px-3 py-1.5 rounded-xl bg-cinema-950 border border-white/10 text-xs font-bold text-white flex items-center gap-1.5">
+            <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+            <span>{hall.format === "Standard" ? "標準數位" : hall.format}</span>
           </div>
         </div>
 
-        {/* 3. Hardware Specifications Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          {/* Seat Spec */}
-          <div className="p-3 rounded-xl bg-cinema-950/80 border border-white/5 space-y-1">
-            <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-              <Users className="w-3.5 h-3.5 text-amber-400" />
-              席位規模
-            </span>
-            {hall.seatCount ? (
-              <p className="text-base font-bold text-white">
-                {hall.seatCount} 席
-                <span className="text-xs text-slate-400 font-normal ml-1">
-                  ({hall.hallSizeLevel})
-                </span>
-              </p>
-            ) : (
-              <p className="text-xs font-bold text-rose-400 flex items-center gap-1">
-                <HelpCircle className="w-3.5 h-3.5" />
-                ⚠️ 目前沒有可靠座位數資料
-              </p>
-            )}
-            <span className="text-[10px] text-slate-500 block">
-              輪椅席：{hall.wheelchairSeats ? `${hall.wheelchairSeats} 席` : "官方未標註"}
-            </span>
+        {/* 3. Emperor Seat Advice (V2: In one plain sentence) */}
+        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs space-y-1">
+          <div className="font-bold text-amber-300 flex items-center gap-1.5">
+            <Crown className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span>最佳座位建議：</span>
+          </div>
+          <p className="text-slate-200 font-medium">
+            {goldenSeatAdvice}
+          </p>
+        </div>
+
+        {/* 4. Screen & Audio Plain Description */}
+        <div className="p-3.5 rounded-xl bg-cinema-950/80 border border-white/5 space-y-2 text-xs">
+          <div className="flex items-start gap-2">
+            <Tv className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="text-slate-400 block text-[11px]">銀幕畫面</span>
+              <span className="text-slate-200 font-semibold">{hall.screenSpecs || "標準高對比銀幕"}</span>
+            </div>
           </div>
 
-          {/* Sound Spec */}
-          <div className="p-3 rounded-xl bg-cinema-950/80 border border-white/5 space-y-1">
-            <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-              <Volume2 className="w-3.5 h-3.5 text-indigo-400" />
-              音響音場設備
-            </span>
-            <p className="text-xs font-bold text-white leading-snug">
-              {hall.soundSystem || "標準數位環繞聲道"}
-            </p>
-            <span className="text-[10px] text-indigo-300 block">
-              格式標籤: {hall.format}
-            </span>
-          </div>
-
-          {/* Screen & Projection */}
-          <div className="sm:col-span-2 p-3 rounded-xl bg-cinema-950/80 border border-white/5 space-y-1">
-            <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-              <Tv className="w-3.5 h-3.5 text-cyan-400" />
-              銀幕與放映技術
-            </span>
-            <p className="text-xs font-bold text-white">
-              {hall.screenSpecs || "標準規格銀幕"}
-            </p>
-            <div className="flex items-center gap-2 pt-0.5">
-              {hall.laserProjection && (
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">
-                  雷射高對比放映
-                </span>
-              )}
-              <span className="text-[11px] text-slate-400">
-                比例適中無死角
-              </span>
+          <div className="flex items-start gap-2 pt-1 border-t border-white/5">
+            <Volume2 className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="text-slate-400 block text-[11px]">音響音場</span>
+              <span className="text-slate-200 font-semibold">{hall.soundSystem || "標準數位環繞聲道"}</span>
             </div>
           </div>
         </div>
 
-        {/* 4. Golden Seating Tip */}
-        <div className="p-3 rounded-xl bg-white/5 border border-white/5 mb-5 text-xs text-slate-300 space-y-1">
-          <span className="font-bold text-amber-300 flex items-center gap-1">
-            <Crown className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-            最佳觀影座位建議：
-          </span>
-          <p className="text-slate-200">{goldenSeatAdvice}</p>
+        {/* 5. Detailed Specs (Foldable level 2) */}
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+            className="w-full py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1 transition-all"
+          >
+            <span>{showTechnicalDetails ? "收合技術細節" : "看詳細放映技術與排距"}</span>
+            {showTechnicalDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+
+          {showTechnicalDetails && (
+            <div className="mt-2.5 p-3 rounded-xl bg-cinema-950 border border-white/10 text-xs text-slate-300 space-y-1.5 animate-fadeIn">
+              <p>• 排距與空間：{hall.specNotes || "寬敞無遮蔽排距設計。"}</p>
+              <p>• 放映技術：{hall.laserProjection ? "4K 高對比雷射放映機" : "數位放映系統"}</p>
+              <p>• 無障礙輪椅席：{hall.wheelchairSeats ? `${hall.wheelchairSeats} 席` : "官方未標註"}</p>
+            </div>
+          )}
         </div>
 
-        {/* 5. Actions (Review Section 4 & 5: 提供「幫我確認」按鈕) */}
-        <div className="flex flex-col sm:flex-row items-center gap-2">
-          {/* Rebranded Action: 幫我確認 (Review Section 5) */}
-          {(!isVerified || hasMissingSeats) && onLaunchVoiceAgent && (
+        {/* 6. Data Source & Credibility */}
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 pt-1">
+          {isVerified ? (
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+          ) : (
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          )}
+          <span>
+            {isVerified
+              ? `資料已核實（來源：${hall.source || theater.source}）`
+              : "部分規格待官方確認（遵循資料真實原則，絕不捏造）"}
+          </span>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="pt-2 flex items-center gap-2">
+          {/* Rebranded: 幫我問影城 (V2 Section 11) */}
+          {!isVerified && onLaunchVoiceAgent && (
             <button
+              type="button"
               onClick={() => onLaunchVoiceAgent(hall)}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black text-xs transition-all shadow-glow-neon"
+              className="flex-1 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-cinema-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-md"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-              <span>幫我確認影廳規格</span>
+              <PhoneCall className="w-4 h-4" />
+              <span>幫我問影城 📞</span>
             </button>
           )}
 
-          {/* Call Theater Button */}
           <a
             href={`tel:${theater.phone}`}
-            className="w-full sm:w-auto flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl bg-cinema-850 hover:bg-cinema-800 border border-white/10 text-slate-200 font-bold text-xs transition-all"
+            className="flex-1 py-3 px-4 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 hover:text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-400" />
-            <span>撥打影城 ({theater.phone})</span>
+            <Phone className="w-4 h-4 text-emerald-400" />
+            <span>撥打影城專線</span>
           </a>
 
           <button
+            type="button"
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs transition-all"
+            className="px-4 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-400 hover:text-white text-xs font-semibold"
           >
             關閉
           </button>
@@ -221,4 +181,3 @@ export const HallSpecModal: React.FC<HallSpecModalProps> = ({
     </div>
   );
 };
-

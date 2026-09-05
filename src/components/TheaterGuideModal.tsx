@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { VERIFIED_THEATERS } from "../data/theaters";
 import {
   X,
-  MapPin,
-  Phone,
-  ExternalLink,
   Car,
-  Train,
-  CheckCircle
+  Utensils,
+  ExternalLink,
+  Phone,
+  Compass
 } from "lucide-react";
 
 interface TheaterGuideModalProps {
@@ -19,11 +18,76 @@ export const TheaterGuideModal: React.FC<TheaterGuideModalProps> = ({
   isOpen,
   onClose
 }) => {
+  const [selectedTheaterId, setSelectedTheaterId] = useState<string>("vscinemas-taoyuan-tonlin");
+
   if (!isOpen) return null;
 
+  const currentTheater = VERIFIED_THEATERS.find((t) => t.id === selectedTheaterId) || VERIFIED_THEATERS[0];
+
+  // Specific 3-section guides for each theater (V2 Section 10)
+  const guides: Record<string, {
+    howToGetThere: { driveTime: string; transit: string; note: string };
+    whereToPark: { spot: string; discount: string; tips: string };
+    whatToEat: { recommendations: string[]; lateNight: string; hours: string };
+  }> = {
+    "vscinemas-taoyuan-tonlin": {
+      howToGetThere: {
+        driveTime: "桃園市區 5~10 分鐘，林口出發約 25 分鐘",
+        transit: "桃園火車站前站出站步行約 3 分鐘即達統領廣場 9F",
+        note: "站前商圈尖峰時段車流量大，搭火車最快最省時。"
+      },
+      whereToPark: {
+        spot: "統領廣場地下停車場 (B3-B4)",
+        discount: "憑當日威秀電影票根可折抵 2~3 小時停車費",
+        tips: "假日午後 14:00~17:00 較容易滿位，可停附近文昌公園地下公有停車場。"
+      },
+      whatToEat: {
+        recommendations: ["海底撈火鍋 (統領 8F)", "涓豆腐韓式料理 (5F)", "Mo-Mo-Paradise 壽喜燒"],
+        lateNight: "看完晚場可走 3 分鐘至大同路熱炒或中正路宵夜豆漿。",
+        hours: "商場餐廳營業至 21:30，部分鍋物營業至深夜 02:00。"
+      }
+    },
+    "in89-taoyuan": {
+      howToGetThere: {
+        driveTime: "桃園市區 5~10 分鐘",
+        transit: "桃園火車站正對面，出站走過斑馬線即達 (步行 2 分鐘)",
+        note: "全桃園離火車站最近的影城，趕場最無負擔。"
+      },
+      whereToPark: {
+        spot: "影城周邊特約停車場 / 站前地下停車場",
+        discount: "持當日票根配合特定信用卡或特約場享優惠折抵",
+        tips: "建議搭乘大眾運輸直達正門，無尋找車位煩惱。"
+      },
+      whatToEat: {
+        recommendations: ["站前商圈老字號潤餅", "正一排骨飯", "站前新光三越美食街"],
+        lateNight: "影城樓下即為站前小吃街，手搖飲、鹹酥雞選擇極多。",
+        hours: "周邊街邊小吃多數營業至 23:00 以後。"
+      }
+    },
+    "vscinemas-linkou-mitsui": {
+      howToGetThere: {
+        driveTime: "國道一號林口交流道下 5 分鐘即可抵達；桃園市區開車約 20~25 分鐘",
+        transit: "桃園機捷 A9 林口站，步行約 8 分鐘或搭接駁公車",
+        note: "跨區首選，路大好開，極具出遊渡假感。"
+      },
+      whereToPark: {
+        spot: "MITSUI OUTLET PARK 大型專用地下與立體停車場 (千個車位)",
+        discount: "憑威秀電影票根一張折抵 2 小時，最高可合併商場消費折抵 5 小時",
+        tips: "車位充裕，極度適合開車族或情侶出遊。"
+      },
+      whatToEat: {
+        recommendations: ["金子半之助天丼", "靜岡勝政日式豬排", "Kua'Aina 夏威夷漢堡"],
+        lateNight: "OUTLET 商場餐廳至 21:30，文化三路周邊有深夜熱炒與居酒屋。",
+        hours: "商場美食街 11:00 ~ 21:30。"
+      }
+    }
+  };
+
+  const currentGuide = guides[currentTheater.id] || guides["vscinemas-taoyuan-tonlin"];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-6 sm:p-7">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-7 space-y-4">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -32,154 +96,138 @@ export const TheaterGuideModal: React.FC<TheaterGuideModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Title (Review Section 6) */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 shadow-glow-accent">
-            <MapPin className="w-6 h-6" />
+        {/* Modal Header */}
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20">
+            <Compass className="w-3.5 h-3.5" />
+            <span>出遊交通指南</span>
           </div>
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            去這間影城 🚗
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-400">
+            看電影前需要知道的事：怎麼去、停哪裡、看完吃什麼
+          </p>
+        </div>
+
+        {/* Theater Switcher Tabs */}
+        <div className="grid grid-cols-3 gap-1.5 bg-cinema-950 p-1 rounded-xl border border-white/10">
+          {VERIFIED_THEATERS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setSelectedTheaterId(t.id)}
+              className={`py-2 px-1 text-xs font-bold rounded-lg transition-all truncate text-center ${
+                selectedTheaterId === t.id
+                  ? "bg-amber-500 text-cinema-950 shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              {t.district === "林口區" ? "林口三井" : t.name.replace("桃園", "").replace("影城", "")}
+            </button>
+          ))}
+        </div>
+
+        {/* Theater Card Header */}
+        <div className="p-3.5 rounded-2xl bg-cinema-950 border border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <span className="text-[11px] font-mono text-amber-400 font-bold uppercase">
-              Pre-Movie Outing Guide
-            </span>
-            <h2 className="text-xl sm:text-2xl font-black text-white">
-              去看電影之前需要知道的事 (桃園 / 林口)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              車程、停車折抵、火車站捷運直達，以及看完可以吃什麼、順便逛什麼。
+            <h4 className="text-base font-bold text-white">{currentTheater.name}</h4>
+            <p className="text-xs text-slate-400">{currentTheater.address}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href={currentTheater.googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-cinema-950 text-xs font-bold flex items-center gap-1 transition-all"
+            >
+              <span>Google 導航</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href={`tel:${currentTheater.phone}`}
+              className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 transition-all"
+              title="撥打電話"
+            >
+              <Phone className="w-4 h-4 text-emerald-400" />
+            </a>
+          </div>
+        </div>
+
+        {/* V2 Section 10: 3 Clean Pillars */}
+        <div className="space-y-3">
+          {/* 1. 🚗 怎麼去 */}
+          <div className="p-4 rounded-2xl bg-cinema-950/80 border border-white/5 space-y-1.5">
+            <div className="flex items-center gap-2 text-sm font-bold text-amber-300">
+              <Car className="w-4 h-4 text-amber-400" />
+              <span>🚗 怎麼去</span>
+            </div>
+            <p className="text-xs text-slate-200">
+              <span className="font-semibold text-slate-400">大眾運輸：</span>
+              {currentGuide.howToGetThere.transit}
+            </p>
+            <p className="text-xs text-slate-300">
+              <span className="font-semibold text-slate-400">開車時間：</span>
+              {currentGuide.howToGetThere.driveTime}
+            </p>
+            <p className="text-[11px] text-slate-400 pt-0.5">
+              💡 {currentGuide.howToGetThere.note}
+            </p>
+          </div>
+
+          {/* 2. 🅿️ 停哪裡 */}
+          <div className="p-4 rounded-2xl bg-cinema-950/80 border border-white/5 space-y-1.5">
+            <div className="flex items-center gap-2 text-sm font-bold text-amber-300">
+              <span>🅿️</span>
+              <span>停哪裡</span>
+            </div>
+            <p className="text-xs text-slate-200 font-semibold">
+              {currentGuide.whereToPark.spot}
+            </p>
+            <p className="text-xs text-emerald-300">
+              🎫 電影折抵：{currentGuide.whereToPark.discount}
+            </p>
+            <p className="text-[11px] text-slate-400 pt-0.5">
+              💡 車位提醒：{currentGuide.whereToPark.tips}
+            </p>
+          </div>
+
+          {/* 3. 🍜 看完吃什麼 */}
+          <div className="p-4 rounded-2xl bg-cinema-950/80 border border-white/5 space-y-1.5">
+            <div className="flex items-center gap-2 text-sm font-bold text-amber-300">
+              <Utensils className="w-4 h-4 text-amber-400" />
+              <span>🍜 看完吃什麼</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              {currentGuide.whatToEat.recommendations.map((food, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-0.5 rounded-lg bg-white/5 text-slate-200 text-xs border border-white/10"
+                >
+                  {food}
+                </span>
+              ))}
+            </div>
+            <p className="text-xs text-slate-300 pt-1">
+              🌙 宵夜場：{currentGuide.whatToEat.lateNight}
+            </p>
+            <p className="text-[11px] text-slate-400">
+              ⏰ 營業時間：{currentGuide.whatToEat.hours}
             </p>
           </div>
         </div>
 
-        {/* Theaters List */}
-        <div className="space-y-4">
-          {VERIFIED_THEATERS.map((theater) => {
-            // Food and Outing Tips for youth
-            let foodTip = "";
-            let shoppingTip = "";
-
-            if (theater.id === "tonlin-vieshow") {
-              foodTip = "統領廣場 5~8F 美食名店（海底撈、燒肉同話、黑毛屋、MoMo-Paradise）、ATT 筷食尚步行 1 分";
-              shoppingTip = "直通統領廣場專櫃品牌、誠品書店、站前徒步購物街區";
-            } else if (theater.id === "in89-taoyuan") {
-              foodTip = "站前正對面小吃圈、中正路老牌肉圓、遠東百貨美食街、大同路咖啡甜品";
-              shoppingTip = "正對新光三越、遠東百貨，火車站站前潮流服飾一級戰區";
-            } else if (theater.id === "linkou-mitsui-vieshow") {
-              foodTip = "三井 Outlet 美食街與主題餐廳（金子半之助、點水樓、藏壽司、乾杯燒肉）";
-              shoppingTip = "全台旗艦級 MITSUI OUTLET PARK，上百家國際精品、運動潮流與日系品牌暢貨中心";
-            }
-
-            return (
-              <div
-                key={theater.id}
-                className="p-5 rounded-3xl bg-cinema-950/85 border border-white/10 space-y-3.5"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
-                  <div>
-                    <h3 className="text-lg font-black text-white flex items-center gap-2">
-                      <span>{theater.name}</span>
-                      <span className="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-semibold border border-emerald-500/30">
-                        官方認證實體
-                      </span>
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      {theater.address}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={theater.googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 text-black font-extrabold text-xs shadow-glow-accent hover:bg-amber-400 transition-all"
-                    >
-                      <span>Google 導航</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-
-                    <a
-                      href={`tel:${theater.phone}`}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-cinema-850 hover:bg-cinema-800 text-slate-200 border border-white/10 font-bold text-xs transition-all"
-                    >
-                      <Phone className="w-3 h-3 text-emerald-400" />
-                      <span>撥打客服</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Transit & Parking Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
-                  <div className="flex items-start gap-2 bg-cinema-900/70 p-3 rounded-2xl border border-white/5">
-                    <Train className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="font-bold text-white block mb-0.5">大眾運輸交通：</span>
-                      <span className="text-slate-300 leading-relaxed">{theater.transitInfo}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 bg-cinema-900/70 p-3 rounded-2xl border border-white/5">
-                    <Car className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="font-bold text-white block mb-0.5">停車折抵優惠：</span>
-                      <span className="text-slate-300 leading-relaxed">{theater.parkingInfo}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Outing Planner: 看完可以吃什麼 & 順便逛什麼 (Review Section 6) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
-                  <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-1">
-                    <span className="font-bold text-amber-300 block flex items-center gap-1">
-                      🍴 看完可以吃什麼：
-                    </span>
-                    <p className="text-slate-200 text-[11px] leading-relaxed">
-                      {foodTip}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 space-y-1">
-                    <span className="font-bold text-indigo-300 block flex items-center gap-1">
-                      🛍️ 順便逛什麼：
-                    </span>
-                    <p className="text-slate-200 text-[11px] leading-relaxed">
-                      {shoppingTip}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Theater Highlight Features */}
-                {theater.features && (
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {theater.features.map((feat, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[11px] text-slate-300 flex items-center gap-1"
-                      >
-                        <CheckCircle className="w-3 h-3 text-amber-400" />
-                        {feat}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Modal Footer */}
-        <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-          <span className="text-[11px] text-slate-500">
-            所有影城電話與地址皆為官方真實認證資料，無任何杜撰。
-          </span>
+        {/* Footer */}
+        <div className="pt-2">
           <button
+            type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs transition-all"
+            className="w-full py-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 hover:text-white font-bold text-xs sm:text-sm transition-all text-center"
           >
-            關閉
+            關閉指南
           </button>
         </div>
       </div>
     </div>
   );
 };
-

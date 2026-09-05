@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MissingInfoTask } from "../types";
 import { SIMULATED_CALL_SCRIPTS, VoiceCallStep } from "../services/missingInfoService";
 import {
   X,
-  Sparkles,
-  Bot,
-  UserCheck,
+  PhoneCall,
   CheckCircle2,
-  Mic,
-  Volume2
+  PhoneForwarded
 } from "lucide-react";
 
 interface VoiceAgentModalProps {
@@ -37,11 +34,11 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
     }
 
     const script = SIMULATED_CALL_SCRIPTS[task.id] || [
-      { sender: "ai", text: `📞 撥打至 ${task.theaterName} 客服 (${task.suggestedPhone})...`, delayMs: 800 },
-      { sender: "theater", text: `您好，這裡是 ${task.theaterName}，請問有什麼能協助您的？`, delayMs: 1400 },
-      { sender: "ai", text: `您好！想確認貴影城 ${task.hallNo || "指定影廳"} 的最新規格資訊，包含席位與投影設備。`, delayMs: 1800 },
-      { sender: "theater", text: `好的！此廳經現場工程確認，規格已更新為標準認證規格。`, delayMs: 2000 },
-      { sender: "ai", text: `謝謝您，資料已由 AI 語音結構化解析並完成核實！`, delayMs: 1200 }
+      { sender: "ai", text: `📞 正在撥打至 ${task.theaterName} 客服 (${task.suggestedPhone})...`, delayMs: 800 },
+      { sender: "theater", text: `您好，這裡是 ${task.theaterName}，請問有什麼能協助您？`, delayMs: 1400 },
+      { sender: "ai", text: `您好！想確認貴影城 ${task.hallNo || "指定影廳"} 的最新規格資訊，包含席位與放映設備。`, delayMs: 1800 },
+      { sender: "theater", text: `好的！此廳經現場工程確認，規格已更新為官方認證標準。`, delayMs: 2000 },
+      { sender: "ai", text: `謝謝您，資料已完成確認並即時更新！`, delayMs: 1200 }
     ];
 
     setIsCalling(true);
@@ -76,115 +73,94 @@ export const VoiceAgentModal: React.FC<VoiceAgentModalProps> = ({
   if (!isOpen || !task) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg rounded-3xl bg-cinema-900 border border-indigo-500/30 shadow-2xl p-6 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-md rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-6 space-y-4 overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+          className="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header (Review Section 5) */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-glow-neon">
-            <Sparkles className="w-6 h-6 text-amber-300" />
+        {/* Modal Header (V2 Section 11: 幫我問影城 📞) */}
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20">
+            <PhoneCall className="w-3.5 h-3.5" />
+            <span>規格確認服務</span>
           </div>
-          <div>
-            <span className="text-[11px] font-mono font-bold text-indigo-400 uppercase tracking-wider">
-              影城規格自動補查系統
-            </span>
-            <h2 className="text-xl font-black text-white flex items-center gap-2">
-              <span>幫我確認影城規格</span>
-            </h2>
-          </div>
+          <h3 className="text-xl font-black text-white tracking-tight">
+            幫我問影城 📞
+          </h3>
+          <p className="text-xs text-slate-400">
+            這個影廳資料還沒確認，系統正在幫你向影城確認
+          </p>
         </div>
 
-        {/* Friendly User Explanation Strip (Review Section 5) */}
-        <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/25 mb-4 text-xs text-indigo-200 leading-relaxed">
-          💡 <strong>系統正在幫你確認：</strong>系統會透過公開資訊與影城自動電話查詢補充未驗證規格（如真實座位數、音效與放映設備），核實後即時更新評分，無須自行撥打電話。
-        </div>
-
-        {/* Audio Wave Simulation Strip */}
-        <div className="p-4 rounded-2xl bg-cinema-950/90 border border-white/10 mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300">
-              <Mic className={`w-5 h-5 ${isCalling ? "animate-pulse text-amber-400" : ""}`} />
-              {isCalling && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
-              )}
+        {/* Status Call Strip */}
+        <div className="p-3.5 rounded-2xl bg-cinema-950 border border-white/[0.08] flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
+              <PhoneForwarded className={`w-5 h-5 ${isCalling ? "animate-pulse" : ""}`} />
             </div>
             <div>
-              <span className="text-xs font-bold text-white block">
-                {task.theaterName} 客服
-              </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                {task.suggestedPhone} · {isCalling ? "通話進行中 (Audio Streaming)" : isDone ? "通話已順利結束" : "連線中"}
-              </span>
+              <div className="text-xs font-bold text-white">{task.theaterName}</div>
+              <div className="text-[11px] text-slate-400">
+                {isCalling ? "正在確認中..." : isDone ? "✅ 已確認完成" : "準備通話"}
+              </div>
             </div>
           </div>
 
-          {/* Animated Wave Bars */}
+          {/* Sound animation */}
           {isCalling && (
             <div className="flex items-center gap-1">
-              {[40, 70, 30, 90, 60, 100, 50, 80].map((h, i) => (
+              {[40, 80, 50, 90, 60].map((h, i) => (
                 <div
                   key={i}
                   className="w-1 bg-amber-400 rounded-full animate-pulse"
-                  style={{ height: `${h}%`, animationDelay: `${i * 100}ms` }}
+                  style={{ height: `${h}%`, animationDelay: `${i * 120}ms` }}
                 />
               ))}
             </div>
           )}
         </div>
 
-        {/* Real-time Transcription Stream */}
-        <div className="space-y-3 max-h-60 overflow-y-auto p-3 rounded-2xl bg-cinema-950/60 border border-white/5 mb-5 text-xs">
+        {/* Call Content Stream */}
+        <div className="space-y-2.5 max-h-56 overflow-y-auto p-3 rounded-2xl bg-cinema-950/60 border border-white/5 text-xs">
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex items-start gap-2.5 p-2.5 rounded-xl animate-fadeIn ${
+              className={`p-2.5 rounded-xl animate-fadeIn ${
                 msg.sender === "ai"
-                  ? "bg-indigo-950/40 text-indigo-200 border border-indigo-500/20"
-                  : "bg-cinema-850 text-slate-200 border border-white/5"
+                  ? "bg-amber-500/10 text-amber-200 border border-amber-500/20 ml-2"
+                  : "bg-white/[0.06] text-slate-200 border border-white/5 mr-2"
               }`}
             >
-              {msg.sender === "ai" ? (
-                <Bot className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              ) : (
-                <UserCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              )}
-              <span className="leading-relaxed">{msg.text}</span>
+              <div className="text-[10px] font-bold text-slate-400 mb-0.5">
+                {msg.sender === "ai" ? "🤖 系統智能助手" : `🏢 ${task.theaterName} 客服`}
+              </div>
+              <p className="leading-relaxed">{msg.text}</p>
             </div>
           ))}
-          {isCalling && (
-            <div className="flex items-center gap-2 text-[11px] text-slate-500 animate-pulse pl-1">
-              <Volume2 className="w-3.5 h-3.5" />
-              <span>語音串流辨識中...</span>
-            </div>
-          )}
         </div>
 
-        {/* Completion Notice */}
+        {/* Success Notice */}
         {isDone && (
-          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 mb-4 animate-fadeIn">
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>
-              已成功擷取影城客服核實資訊！資料庫狀態已由「待確認」更新為「已驗證」。
-            </span>
+            <span>已確認完成！資料庫狀態已即時更新，推薦分數已重新計算。</span>
           </div>
         )}
 
-        {/* Action Button */}
+        {/* Bottom Button */}
         <button
+          type="button"
           onClick={onClose}
-          className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-all"
+          className="w-full py-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 hover:text-white font-bold text-xs transition-all text-center"
         >
-          {isDone ? "完成並關閉" : "關閉面板"}
+          {isDone ? "完成並返回" : "關閉"}
         </button>
       </div>
     </div>
   );
 };
-

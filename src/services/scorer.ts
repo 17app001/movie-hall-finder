@@ -333,9 +333,53 @@ export function rankShowtimes(
     return seatB - seatA;
   });
 
-  // 標記 Top Pick
+  // 標記 Top Pick 與計算替代場次「為什麼不是第一」人話對比 (Revision V2)
   if (results.length > 0) {
     results[0].isTopPick = true;
+    const top = results[0];
+
+    for (let i = 1; i < results.length; i++) {
+      const item = results[i];
+      const contrasts: string[] = [];
+
+      // 距離 / 車程比較
+      if (top.theater.district === "林口區" && item.theater.district === "桃園區") {
+        contrasts.push("少跑 15 分鐘車程");
+      } else if (top.theater.district === "桃園區" && item.theater.district === "林口區") {
+        contrasts.push("需開車到林口");
+      }
+
+      // 價格比較
+      const topPrice = top.showtime.promoPrice ?? top.showtime.standardPrice ?? 320;
+      const itemPrice = item.showtime.promoPrice ?? item.showtime.standardPrice ?? 320;
+      if (itemPrice < topPrice) {
+        contrasts.push(`便宜 NT$${topPrice - itemPrice}`);
+      } else if (itemPrice > topPrice) {
+        contrasts.push(`貴 NT$${itemPrice - topPrice}`);
+      }
+
+      // 影廳規模比較
+      const topSeats = top.hall?.seatCount ?? 200;
+      const itemSeats = item.hall?.seatCount ?? 100;
+      if (topSeats > itemSeats + 50) {
+        contrasts.push(`影廳較小 (${itemSeats}席)`);
+      }
+
+      // 音效規格比較
+      if (top.hall?.format === "Dolby Atmos" && item.hall?.format !== "Dolby Atmos" && item.hall?.format !== "IMAX") {
+        contrasts.push("沒有 Atmos 全景聲");
+      } else if (top.hall?.format === "IMAX" && item.hall?.format !== "IMAX") {
+        contrasts.push("非 IMAX 巨幕");
+      }
+
+      if (contrasts.length >= 2) {
+        item.whyNotFirst = `${contrasts[0]}，但${contrasts[1]}`;
+      } else if (contrasts.length === 1) {
+        item.whyNotFirst = contrasts[0];
+      } else {
+        item.whyNotFirst = "時段與規格略遜首選，也是優質備選";
+      }
+    }
   }
 
   return results;
