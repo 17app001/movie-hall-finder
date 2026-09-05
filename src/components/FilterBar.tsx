@@ -121,16 +121,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         </p>
       </div>
 
-      {/* 3 Core Selection Box */}
-      <div className="bg-cinema-900 border border-white/[0.08] rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4">
+      {/* 3 Core Selection Box (V2.1.1 Section 2.2: 輕量化容器，去除厚重表單卡片感) */}
+      <div className="bg-cinema-900/50 border border-white/[0.06] rounded-3xl p-5 sm:p-7 shadow-xl space-y-5 backdrop-blur-sm">
         {/* 1. 電影 (Movie) */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-              <Film className="w-3.5 h-3.5 text-amber-400" />
+              <Film className="w-3.5 h-3.5 text-slate-400" />
               <span>想看電影</span>
             </label>
-            <span className="text-[11px] text-amber-400 font-semibold truncate max-w-[200px]">
+            <span className="text-[11px] text-slate-400 font-medium truncate max-w-[200px]">
               已選：{currentMovie.title}
             </span>
           </div>
@@ -141,12 +141,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               placeholder="搜尋電影名稱"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-cinema-950 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-bold text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition-all"
+              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-bold text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400/60 focus:bg-white/[0.05] transition-all"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
-          {/* Trending / Filtered Movie Quick Select Pills */}
+          {/* Trending / Filtered Movie Quick Select Pills (V2.1.1 Section 2.3: 沉靜選取狀態，不與主要 CTA 競爭) */}
           <div className="flex flex-wrap gap-1.5 pt-0.5">
             {(filteredMovies.length > 0 ? filteredMovies : movies).map((m) => (
               <button
@@ -158,8 +158,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 }}
                 className={`px-3 py-1.5 text-xs rounded-xl border transition-all truncate max-w-full ${
                   preferences.movieId === m.id
-                    ? "bg-amber-500 text-cinema-950 font-black border-amber-500 shadow-sm"
-                    : "bg-cinema-950/80 text-slate-300 border-white/10 hover:border-white/20"
+                    ? "bg-white/15 text-white font-bold border-white/30 shadow-sm"
+                    : "bg-white/[0.03] text-slate-400 border-white/[0.06] hover:text-slate-200 hover:border-white/15"
                 }`}
               >
                 {m.title}
@@ -171,17 +171,17 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         {/* 2. 地點 (Location) */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-amber-400" />
+            <MapPin className="w-3.5 h-3.5 text-slate-400" />
             <span>人在哪裡</span>
           </label>
-          <div className="grid grid-cols-3 gap-2 bg-cinema-950 p-1.5 rounded-2xl border border-white/10">
+          <div className="grid grid-cols-3 gap-2 bg-white/[0.03] p-1.5 rounded-2xl border border-white/[0.06]">
             <button
               type="button"
               onClick={() => updatePreference("region", "taoyuan")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.region === "taoyuan"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               桃園
@@ -191,8 +191,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => updatePreference("region", "linkou")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.region === "linkou"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               林口
@@ -202,8 +202,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => updatePreference("region", "all")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.region === "all"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               附近
@@ -214,17 +214,17 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         {/* 3. 時間 (Time) - 現在 / 今晚 / 明天 / 自訂 */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <Clock className="w-3.5 h-3.5 text-slate-400" />
             <span>什麼時間</span>
           </label>
-          <div className="grid grid-cols-4 gap-1.5 bg-cinema-950 p-1.5 rounded-2xl border border-white/10">
+          <div className="grid grid-cols-4 gap-1.5 bg-white/[0.03] p-1.5 rounded-2xl border border-white/[0.06]">
             <button
               type="button"
               onClick={() => updatePreference("dateSlot", "today-afternoon")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.dateSlot === "today-afternoon"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               現在
@@ -234,8 +234,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => updatePreference("dateSlot", "today-evening")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.dateSlot === "today-evening"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               今晚
@@ -245,8 +245,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => updatePreference("dateSlot", "tomorrow-afternoon")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.dateSlot === "tomorrow-afternoon"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               明天
@@ -256,8 +256,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => updatePreference("dateSlot", "custom")}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 preferences.dateSlot === "custom" || preferences.dateSlot === "weekend"
-                  ? "bg-amber-500 text-cinema-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               自訂

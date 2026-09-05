@@ -38,7 +38,6 @@ const views = [
   // Mobile Views (390x950 iPhone Viewport)
   { name: 'mobile_01_homepage.png', category: 'mobile', chinese: '01_首頁極簡搜尋入口.png', url: 'http://localhost:4173', size: '390,750' },
   { name: 'mobile_02_search_result_top_pick.png', category: 'mobile', chinese: '02_搜尋結果_TopPick電影英雄卡.png', url: 'http://localhost:4173?searched=true', size: '390,1050' },
-  { name: 'mobile_02_top_pick.png', category: 'mobile', chinese: '02_TopPick電影英雄卡_相容.png', url: 'http://localhost:4173?searched=true', size: '390,1050' },
   { name: 'mobile_03_preference_drawer.png', category: 'mobile', chinese: '03_想更合你胃口_偏好抽屜.png', url: 'http://localhost:4173?searched=true&view=drawer', size: '390,950' },
   { name: 'mobile_04_hall_pk.png', category: 'mobile', chinese: '04_兩場直接PK_勝負對決.png', url: 'http://localhost:4173?searched=true&view=compare', size: '390,950' },
   { name: 'mobile_05_hall_detail.png', category: 'mobile', chinese: '05_影廳詳情與帝王位.png', url: 'http://localhost:4173?searched=true&view=spec', size: '390,950' },

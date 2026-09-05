@@ -92,10 +92,10 @@ export const TopPickCard: React.FC<TopPickCardProps> = ({
           </div>
 
           <div className="flex items-center space-x-2">
-            {/* Score as Tasteful Support Badge (V2: not dominating benchmark) */}
-            <div className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/10 text-xs font-bold text-amber-300">
-              <span className="text-white font-black text-sm">{recommendScore}</span>
-              <span className="text-[10px] text-slate-400">分推薦</span>
+            {/* Score demoted to quiet supporting info (V2.1.1 Section 3.1) */}
+            <div className="flex items-center space-x-1 px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] text-slate-400">
+              <span className="text-slate-300 font-semibold">{recommendScore}</span>
+              <span>分推薦</span>
             </div>
 
             <button
@@ -156,28 +156,29 @@ export const TopPickCard: React.FC<TopPickCardProps> = ({
               </div>
             </div>
 
-            {/* Plain Language Verdict Quote (V2 Section 5) */}
-            <div className="text-sm sm:text-base font-medium text-slate-200 bg-amber-500/[0.08] border-l-4 border-amber-500 px-3.5 py-2.5 rounded-r-xl">
+            {/* Plain Language Verdict Quote (V2.1.1 Section 3.2: 一秒理解首層理由) */}
+            <div className="text-sm sm:text-base font-medium text-slate-200 bg-white/[0.03] border-l-2 border-amber-400/80 px-3.5 py-2 rounded-r-xl">
               「{humanSummary}」
             </div>
 
-            {/* Quick Spec Tags */}
+            {/* Quick Spec Tags (V2.1.1 Section 3.3: 僅顯示 2~3 個最強決策信號) */}
             <div className="flex flex-wrap gap-1.5 pt-0.5 text-xs">
               {hall?.seatCount && (
                 <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] text-slate-200 border border-white/10 font-semibold">
-                  🏟️ {hall.seatCount} 席大廳
+                  🏟️ {hall.seatCount >= 200 ? "大型影廳" : `${hall.seatCount} 席`}
                 </span>
               )}
-              {hall?.format && hall.format !== "Standard" && (
-                <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30 font-semibold">
+              {hall?.format && hall.format !== "Standard" ? (
+                <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] text-amber-300 border border-white/10 font-semibold">
                   🔊 {hall.format}
                 </span>
+              ) : (
+                <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] text-slate-200 border border-white/10 font-semibold">
+                  ✨ 旗艦廳
+                </span>
               )}
               <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] text-slate-300 border border-white/10">
-                💰 NT${effectivePrice}
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] text-slate-300 border border-white/10">
-                📍 {theater.district} (火車站旁)
+                ⏰ 時間剛好
               </span>
             </div>
 
@@ -247,6 +248,11 @@ export const TopPickCard: React.FC<TopPickCardProps> = ({
                         </span>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 text-[11px] text-slate-300 pt-1">
+                    <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10">💰 票價：NT${effectivePrice}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10">📍 地點：{theater.district} ({theater.transitInfo || "交通便利"})</span>
                   </div>
 
                   <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-400">

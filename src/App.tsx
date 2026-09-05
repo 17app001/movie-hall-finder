@@ -265,20 +265,22 @@ export function App() {
         </div>
       )}
 
-      {/* Footer */}
-      <footer className={`border-t border-white/[0.08] bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500 ${hasSearched ? "mb-14 sm:mb-0" : "mb-0"}`}>
-        <div className="max-w-4xl mx-auto space-y-1.5">
-          <p className="font-bold text-slate-300">
-            Movie Hall Finder · 桃園 / 林口跨區 V2.1
-          </p>
-          <p className="text-slate-400">
-            不用自己查半天，我幫你挑今天最值得看的那一場。
-          </p>
-          <p className="text-[11px] text-slate-500">
-            資料可以少，但不能假 · 影城交通資訊皆為官方核實認證
-          </p>
-        </div>
-      </footer>
+      {/* Footer (V2.1.1 Section 2.1: 結果頁呈現完整資訊，首頁保持極簡乾淨) */}
+      {hasSearched && (
+        <footer className="border-t border-white/[0.08] bg-cinema-950 py-8 px-4 text-center text-xs text-slate-500 mb-14 sm:mb-0">
+          <div className="max-w-4xl mx-auto space-y-1.5">
+            <p className="font-bold text-slate-300">
+              Movie Hall Finder · 桃園 / 林口跨區
+            </p>
+            <p className="text-slate-400">
+              不用自己查半天，我幫你挑今天最值得看的那一場。
+            </p>
+            <p className="text-[11px] text-slate-500">
+              資料可以少，但不能假 · 影城交通資訊皆為官方核實認證
+            </p>
+          </div>
+        </footer>
+      )}
 
       {/* Modals & Drawers */}
       <PreferenceDrawer

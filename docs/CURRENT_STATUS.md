@@ -48,6 +48,21 @@ Authorization boundaries and required completion steps:
 - Then **STOP at the Niko review gate**. Do not proceed beyond review or treat V2.1.1 as approved.
 - Do not promote V2.1.1 to the authoritative specification without explicit Jerry/Niko approval.
 
+### V2.1.1 implementation status — 2026-09-05
+Status: **Implementation completed / pending Niko review**
+- V2.1.1 visual & information density polish completed:
+  - Homepage search container lightened (weaker border, less chrome, breathing room).
+  - Selected pills/buttons calmed to soft off-white active states, reserving dominant vibrant amber for primary CTA `幫我挑一場 ✨`.
+  - Homepage bottom copy trimmed; redundant footer removed on homepage so single trust line `資料不足時會告訴你，不亂猜。` remains uncluttered.
+  - Top Pick score demoted to quiet supporting info (`97分推薦`), showtime & venue carry primary visual weight.
+  - One-line recommendation reason: `「大廳、時間剛好，而且離你近。」`.
+  - Curated first-layer badges to 2–3 strongest decision signals (`大型影廳`, `Dolby Atmos`, `時間剛好`), moving price & transit into expanded details.
+  - Duplicate `mobile_02_top_pick.png` removed and archived to `docs/archive/screenshots-v1/`.
+  - Official screenshots refreshed across all mobile and desktop viewports.
+  - Full test suite passed (7/7 tests). Production build passed.
+  - Deployed live to GitHub Pages and Surge CDN.
+- **STOPPED at Niko review gate**: Awaiting explicit Jerry/Niko approval before promoting V2.1.1 to authoritative status.
+
 ### Maintenance rule
 Whenever a newer authoritative product/UI/architecture spec is intentionally created, merged, or promoted, the same work must update this file so this authority map never points to an older version.
 

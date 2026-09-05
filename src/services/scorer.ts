@@ -237,19 +237,18 @@ export function calculateRecommendation(
     { label: "優惠", points: pPromoPrice, tag: `+${pPromoPrice} 優惠`, type: "promo" }
   ];
 
-  // 一句人話推薦理由 (Review 2.C & 10)
+  // 一句人話推薦理由 (V2.1.1 Section 3.2: 一秒理解首層理由)
   let humanSummary = "";
   if (hall?.id === "tonlin-hall-1") {
-    humanSummary = "大廳、時間剛好，全桃最大 288 席旗艦廳，下班出站 3 分鐘直接享受杜比全景聲。";
+    humanSummary = "大廳、時間剛好，而且離你近。";
   } else if (hall?.id === "in89-hall-1") {
-    humanSummary = "站前正對面，LUXE 終極銀幕搭配重低音震動椅，動作體感最過癮。";
+    humanSummary = "LUXE 終極巨幕搭震動椅，動作體感最過癮。";
   } else if (hall?.id === "linkou-imax") {
-    humanSummary = "北台灣頂級 4K 雙雷射 340 席巨幕，沉浸視野無可匹敵，最值得特地跨區看一場。";
+    humanSummary = "北台灣頂級 4K 雙雷射巨幕，沉浸視野無可匹敵。";
   } else {
     const hallDesc = hall?.seatCount && hall.seatCount >= 200 ? "大廳" : hall?.format && hall.format !== "Standard" ? `${hall.format}廳` : "環境舒適";
     const timeDesc = timeSlotScore >= 80 ? "時間剛好" : "時段彈性";
-    const priceDesc = effectivePrice <= 300 ? "而且票價優惠超值" : "音畫規格極高";
-    humanSummary = `${hallDesc}、${timeDesc}，${priceDesc}。`;
+    humanSummary = `${hallDesc}、${timeDesc}，而且離你近。`;
   }
 
   return {
