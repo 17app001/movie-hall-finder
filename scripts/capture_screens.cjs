@@ -33,23 +33,24 @@ function downloadQRCodes() {
   });
 }
 
-// 2. Exact Views matching Niko Review Gate (Revision V2 Section 18)
+// 2. Exact Views matching Niko Review Gate (Revision V2.1 Section 18)
 const views = [
   // Mobile Views (390x950 iPhone Viewport)
-  { name: 'mobile_01_homepage.png', category: 'mobile', chinese: '01_首頁生活化搜尋.png', url: 'http://localhost:4173', size: '390,750' },
-  { name: 'mobile_02_top_pick.png', category: 'mobile', chinese: '02_TopPick電影英雄卡.png', url: 'http://localhost:4173', size: '390,1050' },
-  { name: 'mobile_03_preference_drawer.png', category: 'mobile', chinese: '03_想更合你胃口_偏好抽屜.png', url: 'http://localhost:4173?view=drawer', size: '390,950' },
-  { name: 'mobile_04_hall_pk.png', category: 'mobile', chinese: '04_兩場直接PK_勝負對決.png', url: 'http://localhost:4173?view=compare', size: '390,950' },
-  { name: 'mobile_05_hall_detail.png', category: 'mobile', chinese: '05_影廳詳情與帝王位.png', url: 'http://localhost:4173?view=spec', size: '390,950' },
-  { name: 'mobile_06_theater_guide.png', category: 'mobile', chinese: '06_去這間影城_出遊指南.png', url: 'http://localhost:4173?view=guide', size: '390,950' },
-  { name: 'mobile_07_ask_theater.png', category: 'mobile', chinese: '07_幫我問影城_電話確認.png', url: 'http://localhost:4173?view=voice', size: '390,950' },
+  { name: 'mobile_01_homepage.png', category: 'mobile', chinese: '01_首頁極簡搜尋入口.png', url: 'http://localhost:4173', size: '390,750' },
+  { name: 'mobile_02_search_result_top_pick.png', category: 'mobile', chinese: '02_搜尋結果_TopPick電影英雄卡.png', url: 'http://localhost:4173?searched=true', size: '390,1050' },
+  { name: 'mobile_02_top_pick.png', category: 'mobile', chinese: '02_TopPick電影英雄卡_相容.png', url: 'http://localhost:4173?searched=true', size: '390,1050' },
+  { name: 'mobile_03_preference_drawer.png', category: 'mobile', chinese: '03_想更合你胃口_偏好抽屜.png', url: 'http://localhost:4173?searched=true&view=drawer', size: '390,950' },
+  { name: 'mobile_04_hall_pk.png', category: 'mobile', chinese: '04_兩場直接PK_勝負對決.png', url: 'http://localhost:4173?searched=true&view=compare', size: '390,950' },
+  { name: 'mobile_05_hall_detail.png', category: 'mobile', chinese: '05_影廳詳情與帝王位.png', url: 'http://localhost:4173?searched=true&view=spec', size: '390,950' },
+  { name: 'mobile_06_theater_guide.png', category: 'mobile', chinese: '06_去這間影城_出遊指南.png', url: 'http://localhost:4173?searched=true&view=guide', size: '390,950' },
+  { name: 'mobile_07_ask_theater.png', category: 'mobile', chinese: '07_幫我問影城_電話確認.png', url: 'http://localhost:4173?searched=true&view=voice', size: '390,950' },
 
   // Desktop Views (1440x1200)
-  { name: 'desktop_01_main.png', category: 'desktop', chinese: '01_電腦版全景_首頁與英雄卡.png', url: 'http://localhost:4173', size: '1440,1500' },
-  { name: 'desktop_02_hall_pk.png', category: 'desktop', chinese: '02_電腦版_兩場直接PK.png', url: 'http://localhost:4173?view=compare', size: '1440,1100' },
-  { name: 'desktop_03_hall_spec.png', category: 'desktop', chinese: '03_電腦版_影廳詳情.png', url: 'http://localhost:4173?view=spec', size: '1440,1100' },
-  { name: 'desktop_04_theater_guide.png', category: 'desktop', chinese: '04_電腦版_去這間影城指南.png', url: 'http://localhost:4173?view=guide', size: '1440,1100' },
-  { name: 'desktop_05_ask_theater.png', category: 'desktop', chinese: '05_電腦版_幫我問影城.png', url: 'http://localhost:4173?view=voice', size: '1440,1100' }
+  { name: 'desktop_01_main.png', category: 'desktop', chinese: '01_電腦版全景_首頁與英雄卡.png', url: 'http://localhost:4173?searched=true', size: '1440,1500' },
+  { name: 'desktop_02_hall_pk.png', category: 'desktop', chinese: '02_電腦版_兩場直接PK.png', url: 'http://localhost:4173?searched=true&view=compare', size: '1440,1100' },
+  { name: 'desktop_03_hall_spec.png', category: 'desktop', chinese: '03_電腦版_影廳詳情.png', url: 'http://localhost:4173?searched=true&view=spec', size: '1440,1100' },
+  { name: 'desktop_04_theater_guide.png', category: 'desktop', chinese: '04_電腦版_去這間影城指南.png', url: 'http://localhost:4173?searched=true&view=guide', size: '1440,1100' },
+  { name: 'desktop_05_ask_theater.png', category: 'desktop', chinese: '05_電腦版_幫我問影城.png', url: 'http://localhost:4173?searched=true&view=voice', size: '1440,1100' }
 ];
 
 console.log('Starting preview server on port 4173...');
@@ -77,6 +78,7 @@ async function captureAll() {
   await downloadQRCodes();
 
   const destDirs = [
+    cloudBaseDir,
     path.join(cloudBaseDir, 'screenshots'),
     path.join(cloudBaseDir, '最新截圖')
   ];

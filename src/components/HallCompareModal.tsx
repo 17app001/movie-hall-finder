@@ -138,8 +138,8 @@ export const HallCompareModal: React.FC<HallCompareModalProps> = ({
     : hallA;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="bg-cinema-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="bg-cinema-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-[calc(100vw-24px)] sm:max-w-2xl w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-auto">
         {/* Close Button */}
         <button
           onClick={onClose}

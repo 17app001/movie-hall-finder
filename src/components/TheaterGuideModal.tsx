@@ -86,8 +86,8 @@ export const TheaterGuideModal: React.FC<TheaterGuideModalProps> = ({
   const currentGuide = guides[currentTheater.id] || guides["vscinemas-taoyuan-tonlin"];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-7 space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+      <div className="relative w-full max-w-[calc(100vw-24px)] sm:max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-7 space-y-4">
         {/* Close Button */}
         <button
           onClick={onClose}

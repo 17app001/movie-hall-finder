@@ -109,18 +109,18 @@ export const TopPickCard: React.FC<TopPickCardProps> = ({
         </div>
 
         {/* Main Content: Movie Poster + Hero Details */}
-        <div className="flex flex-col md:flex-row gap-5 lg:gap-7 items-start">
+        <div className="flex flex-row gap-3.5 sm:gap-5 items-start">
           {/* Movie Poster Artwork */}
           {movie && (
-            <div className="relative w-full md:w-44 lg:w-48 shrink-0 aspect-[2/3] rounded-xl overflow-hidden bg-cinema-950 border border-white/10 shadow-lg group">
+            <div className="relative w-24 xs:w-28 sm:w-36 md:w-44 shrink-0 aspect-[2/3] rounded-xl overflow-hidden bg-cinema-950 border border-white/10 shadow-lg group">
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-2.5 left-2.5 right-2.5">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/70 text-amber-300 border border-amber-500/30">
+              <div className="absolute bottom-1.5 left-1.5 right-1.5 text-center">
+                <span className="text-[9px] xs:text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/70 text-amber-300 border border-amber-500/30 inline-block">
                   {movie.rating} · {movie.runtime}分
                 </span>
               </div>
@@ -128,13 +128,13 @@ export const TopPickCard: React.FC<TopPickCardProps> = ({
           )}
 
           {/* Hero Core Text Information */}
-          <div className="flex-1 space-y-3.5 w-full">
+          <div className="flex-1 space-y-2 xs:space-y-2.5 min-w-0">
             {/* Movie Title */}
             <div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight truncate">
                 {movie?.title || showtime.movieTitle}
               </h3>
-              <p className="text-xs text-slate-400 pt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-400 pt-0.5 truncate">
                 {movie?.englishTitle} · {movie?.genre.slice(0, 3).join(" / ")}
               </p>
             </div>

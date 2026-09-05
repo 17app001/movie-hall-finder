@@ -39,8 +39,8 @@ export const HallSpecModal: React.FC<HallSpecModalProps> = ({
   const goldenSeatAdvice = hall.emperorSeatAdvice || "推薦：中間偏後 2～3 排（視野水平無遮蔽）";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-6 sm:p-7 space-y-4 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+      <div className="relative w-full max-w-[calc(100vw-24px)] sm:max-w-lg rounded-2xl sm:rounded-3xl bg-cinema-900 border border-white/10 shadow-2xl p-5 sm:p-7 space-y-4 overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
